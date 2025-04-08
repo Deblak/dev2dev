@@ -1,0 +1,29 @@
+### Specifical files ###
+**/application-dev.properties
+**/application.properties
+
+.DS_Store
+
+### Maven / Eclipse files ###
+*.classpath
+*.project
+.settings/
+/target/
+/.idea/
+
+### VS Code ###
+.vscode/
+.gitattributes/
+
+### Java build files ###
+*.iml
+
+### Logs ###
+./logs
+
+
+### IntelliJ idea ###
+.idea
+*.iws
+*.iml
+*.ipr
