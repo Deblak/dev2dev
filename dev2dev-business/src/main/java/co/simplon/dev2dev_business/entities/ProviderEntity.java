@@ -10,10 +10,10 @@ public class ProviderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "title")
+    @Column(name="title")
     private String title;
 
-    @Column(name = "link")
+    @Column(name="link")
     private String link;
 
     @Column(name="description")

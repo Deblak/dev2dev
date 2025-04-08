@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Length;
 public record ProviderDto(
         @NotBlank @Length(max = 200) String title,
         @NotBlank @Length(max = 1000) String description,
-        @NotBlank @Length(max = 400) String url,
-        String last_date_updated
+        @NotBlank @Length(max = 400) String url
 ) {
 }
