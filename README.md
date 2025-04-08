@@ -23,7 +23,7 @@ npm run build
 
 ### Custom to manage environnement
 Create files (on the root)  and custom your  environnement variables with Vite convention: 
-
+```
 dev2dev-presentation/
 ├── public/
 ├── src/
@@ -32,7 +32,7 @@ dev2dev-presentation/
 ├── .env.development
 ├── .env.production
 ├── package.json
-
+```
  - For dev environnement
 File name: `.env.development`
 Variable template: `VITE_API_URL=http://localhost:<number>/`
