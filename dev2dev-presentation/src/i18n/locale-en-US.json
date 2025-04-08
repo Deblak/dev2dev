@@ -1,0 +1,10 @@
+{
+    "login": "Login",
+    "signup": "Sign up",
+    "username": "Username",
+    "password": "Password",
+    "passwordPlaceholder": "Password123!",
+    "email": "Email",
+    "emailPlaceholder": "dupond@mail.com",
+    "confirm": "Confirm"
+}
