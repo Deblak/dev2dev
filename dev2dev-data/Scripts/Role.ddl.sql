@@ -1,3 +1,4 @@
+-- First execution --
 DROP TABLE IF EXISTS t_roles;
 
 CREATE TABLE t_roles(
