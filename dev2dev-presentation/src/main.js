@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import { createI18n } from 'vue-i18n'
 import English from './i18n/locale-en-US.json'
+import French from './i18n/locale-fr-FR.json'
 
 import "./styles/common.css";
 
@@ -14,7 +15,8 @@ export const i18n = createI18n({
     legacy: false,
     globalInjection: true,
     messages: {
-    en: English
+    en: English,
+    fr: French
     }
 })
 
