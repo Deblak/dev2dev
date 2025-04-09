@@ -11,4 +11,6 @@ import co.simplon.dev2dev_business.entities.Account;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	Optional<Account> findByUsernameIgnoreCase(String username);
 
+	boolean existsByUsernameIgnoreCase(String username);
+
 }
