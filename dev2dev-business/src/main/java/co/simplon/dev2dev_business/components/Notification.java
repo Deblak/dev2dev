@@ -18,15 +18,15 @@ public class Notification {
     private final Set<SseEmitter> emitters = new CopyOnWriteArraySet<>();
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
-    public SseEmitter subscribe() {
+    public SseEmitter subscribe()  {
         var emitter = new SseEmitter(-1L);
         emitters.add(emitter);
         emitter.onCompletion(() -> emitters.remove(emitter));
-        emitter.onTimeout(() -> {
-            emitter.complete();
-            emitters.remove(emitter);
-        });
-        emitter.onError((e) -> emitters.remove(emitter));
+//        emitter.onTimeout(() -> {
+//            emitter.complete();
+//            emitters.remove(emitter);
+//        });
+//        emitter.onError((e) -> emitters.remove(emitter));
         return emitter;
     }
 
@@ -39,23 +39,27 @@ public class Notification {
                         emitter.send(event);
                     } catch (IOException e) {
 //                        retry(emitter, event,0);
+                        emitter.completeWithError(new RuntimeException(e));
                         emitters.remove(emitter);
-                        throw new RuntimeException(e);
+//                        throw new RuntimeException(e);
                     }
                 }));
     }
 
     void retry(SseEmitter emitter, SseEventBuilder event , int retryCount) {
         int count = retryCount;
-        if (count <5) {
+        if (count < 3) {
             try {
+                Thread.sleep(50L);
                 emitter.send(event);
             } catch (IOException ignored) {
                 retry(emitter, event, count + 1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         } else {
+            emitter.completeWithError(new RuntimeException("unable to connect with client"));
             emitters.remove(emitter);
-            throw new RuntimeException("unable to connect with client");
         }
     }
 }
