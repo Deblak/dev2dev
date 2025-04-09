@@ -5,4 +5,34 @@
   font-weight: 400;
 }
 
+h1 {
+	margin-bottom: 30px;
+	font-size: 2rem;
+  font-weight: bold;
+	color : red;
+}
 
+button {
+	background-color: red;
+	border : none;
+	color: white;
+	font-size: 16px;
+	border-radius: 5px;
+}
+
+button:hover {
+	background-color: black;
+}
+
+label {
+	align-items: flex-start;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.error {
+	color: red;
+	font-size: 0.9em;
+	margin-top: 5px;
+}
