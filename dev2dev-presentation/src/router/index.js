@@ -19,6 +19,11 @@ const router = createRouter({
       name: "not-found",
       component: () => import("../views/errors/PageNotFoundView.vue"),
     },
+    {
+      path: "/article-share",
+      name: "article-share",
+      component: () => import("../views/ArticleShareView.vue"),
+    },
   ],
 });
 
