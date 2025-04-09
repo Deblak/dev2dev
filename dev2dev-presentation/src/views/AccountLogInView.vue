@@ -18,8 +18,11 @@ export default {
                 body: JSON.stringify(this.formData)
             };
             const response = await fetch('http://localhost:8080/login', options);
+            
             if (response.ok) {
+                const data = await response.json();
                 alert('Account authenticated with username: ' + this.formData.username);
+                localStorage.setItem('jwtToken', data.token);
             } else if (response.status == 401) {
                 alert("Bad credentials");
             } else {
