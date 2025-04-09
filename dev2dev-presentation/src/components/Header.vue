@@ -1,11 +1,18 @@
 <script setup>
+import { onMounted, onUpdated, ref } from 'vue';
 import NotificationBar from './NotificationBar.vue';
+
+const token = ref(null)
+
+onMounted(() => {
+    token.value = localStorage.getItem('jwtToken');
+})
 </script>
 
 <template>
     <header>
         <h1>Dev2Dev</h1>
-        <div class="notification-bar" v-if="true">
+        <div class="notification-bar" v-if="token">
             <NotificationBar/>
         </div>
     </header>
