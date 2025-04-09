@@ -1,9 +1,11 @@
 package co.simplon.dev2dev_business.dtos;
 
-public record AccountCreateDto(Long id, String username, String password) {
+import java.util.Set;
+
+public record AccountCreateDto(Long id, String username, String password, Set<String> roles) {
 
 	@Override
 	public String toString() {
-		return String.format("{username=%s,password=[PROTECTED]}", id, username);
+		return String.format("{username=%s,password=[PROTECTED]}", id, username, roles);
 	}
 }

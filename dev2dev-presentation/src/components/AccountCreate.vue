@@ -7,10 +7,10 @@
 				<label>Email*</label>
 				<input
 					type="email"
-					v-model="form.email"
+					v-model="form.username"
 					placeholder="email@email.com"
 				/>
-				<p class="error" v-if="errors.email">{{ errors.email }}</p>
+				<p class="error" v-if="errors.username">{{ errors.username }}</p>
 
 				<label>Password*</label>
 				<div class="password-container">
@@ -21,46 +21,49 @@
 					/>
 					<p class="eye" @click="visiblePassword = !visiblePassword">
 						<i :class="visiblePassword ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"></i>
-                    </p>
+					</p>
 				</div>
 				<p class="error" v-if="errors.password">{{ errors.password }}</p>
 
 				<button type="submit">Create account</button>
 			</form>
-            <p class="already-accou t
-            ">
-        Already have an account
-        <a href="/login">Sign In</a>
-    </p>
+			<p class="already-accou t">
+				Already have an account
+				<a href="/login">Sign In</a>
+			</p>
 		</div>
 	</div>
 </template>
 
 <script>
-
+import "../styles/homeForm.css";
 
 export default {
 	name: "AccountCreate",
 	data() {
 		return {
 			form: {
-				email: "",
+				username: "",
 				password: "",
 			},
 			errors: {
-				email: "",
+				username: "",
 				password: "",
 			},
 			visiblePassword: false,
 		};
 	},
 	methods: {
-		validForm() {
-			this.errors.email = "";
+		validPassword(mdp) {
+			const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+			return regex.test(mdp);
+		},
+		async validForm() {
+			this.errors.username = "";
 			this.errors.password = "";
 
-			if (!this.form.email.trim()) {
-				this.errors.email = "Email is required.";
+			if (!this.form.username.trim()) {
+				this.errors.username = "Email is required.";
 			}
 
 			if (!this.validPassword(this.form.password)) {
@@ -68,13 +71,32 @@ export default {
 					"8 characters min, with one uppercase, one lowercase, one number and one special character.";
 			}
 
-			if (!this.errors.email && !this.errors.password) {
-				alert("Account created successfully !");
+			if (!this.errors.username && !this.errors.password) {
+				try {
+					const response = await fetch("http://localhost:8080/accounts", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							username: this.form.username,
+							password: this.form.password,
+						}),
+					});
+					if (!response.ok) {
+						const errorData = await response.json();
+						alert("Error: " + (errorData.message || "Something went wrong."));
+						return;
+					}
+
+					alert("Account created successfully!");
+					this.form.username = "";
+					this.form.password = "";
+				} catch (error) {
+					console.error("Network error:", error);
+					alert("Network error. Please try again later.");
+				}
 			}
-		},
-		validPassword(mdp) {
-			const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-			return regex.test(mdp);
 		},
 	},
 };
@@ -107,41 +129,6 @@ export default {
 	width: 100%;
 	position: relative;
 }
-
-.form-container {
-	width: 100%;
-	max-width: 400px;
-	margin: auto;
-	padding: 20px;
-	background: #f0f0f0;
-	border-radius: 10px;
-	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-	color: black;
-	text-align: left;
-}
-
-form {
-	display: flex;
-	flex-direction: column;
-    width: 100%;
-}
-
-input {
-	width: 100%;
-	align-self: center;
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-}
-
-
-button {
-	align-self: center;
-	margin-top: 20px;
-	padding: 8px;
-	border : none;
-}
-
 
 @media (max-width: 600px) {
 	.form-container {

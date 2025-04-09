@@ -10,46 +10,54 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "t_roles")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
 
-    public Long getId() {
-	return id;
-    }
+	@Column(name = "name", unique = true, nullable = false)
+	private String name;
 
-    protected Role(Long id, String name, String roleDefault) {
-	this.id = id;
-	this.name = name;
-	this.roleDefault = roleDefault;
-    }
+	@Column(name = "role_default", nullable = false)
+	private boolean roleDefault;
 
-    @SuppressWarnings("unused")
-    public void setId(Long id) {
-	// this.id = id; genareted by db
-    }
+	protected Role(Long id, String name, boolean roleDefault) {
+		this.id = id;
+		this.name = name;
+		this.roleDefault = roleDefault;
+	}
 
-    public String getName() {
-	return name;
-    }
+	public Role() {
+	}
 
-    public void setName(String name) {
-	this.name = name;
-    }
+	@SuppressWarnings("unused")
+	public void setId(Long id) {
+		// this.id = id; genareted by db
+	}
 
-    public String getRoleDefault() {
-	return roleDefault;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setRoleDefault(String roleDefault) {
-	this.roleDefault = roleDefault;
-    }
+	public String getName() {
+		return name;
+	}
 
-    @Column(name = "name", unique = true, nullable = false)
-    private String name;
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Column(name = "role_default", nullable = false)
-    private String roleDefault;
+	public boolean isRoleDefault() {
+		return roleDefault;
+	}
+
+	public void setRoleDefault(boolean roleDefault) {
+		this.roleDefault = roleDefault;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Role{name='%s'}", name);
+	}
 
 }
