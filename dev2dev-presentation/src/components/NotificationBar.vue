@@ -7,7 +7,7 @@ const notifications = ref([])
 
 onMounted(async () => {
     console.log("Notification bar monted")
-    await fetchEventSource(`${import.meta.env.VITE_API_URL}sse/test`, {
+    await fetchEventSource(`${import.meta.env.VITE_API_URL}sse`, {
       async onopen(response) {
         if (response.ok ) {
           sseConnectionActive.value = true;
@@ -19,7 +19,7 @@ onMounted(async () => {
         }
     },
     onmessage(msg) {
-        console.log(msg.data);
+        notifications.value.push(msg.data);
     }
 });
 
@@ -30,22 +30,19 @@ onMounted(async () => {
 <template>
   <div class="notification-bell clicable">
     <span class="material-symbols-outlined">notifications</span>
-    <p class="notification-count">{{ notifications.length }}</p>
+    <p class="notification-count" v-if="notifications.length < 10">{{ notifications.length }}</p>
+    <p class="notification-count-max" v-else >9+</p>
     <div class="notification-count-bg"></div>
   </div>
 </template>
 
 <style scoped>
 
-.clicable {
-  cursor: pointer;
-}
-
 .notification-count-bg {
   position: absolute;
   background-color: white;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 100%;
   top: -5px;
   right: -7px;
@@ -53,9 +50,17 @@ onMounted(async () => {
 
 .notification-count {
   position: absolute;
-  top: -22px;
-  right: -3px;
+  top: -25px;
+  right: -2px;
   z-index: 1;
+}
+
+.notification-count-max {
+  position: absolute;
+  top: -20px;
+  right: -6px;
+  z-index: 1;
+  font-size: small;
 }
 
 .notification-bell {

@@ -27,9 +27,9 @@ public class SSEController {
     }
 
     @Deprecated(since = "for test purposes", forRemoval = true)
-    @GetMapping("/send")
+    @PostMapping("/send")
     @ResponseStatus(HttpStatus.OK)
-    public void send(@RequestParam String message) {
+    public void send(@RequestBody String message) {
         notification.create(message);
     }
 
