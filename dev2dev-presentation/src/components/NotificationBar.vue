@@ -7,21 +7,25 @@ const notifications = ref([])
 
 onMounted(async () => {
     console.log("Notification bar monted")
-//     await fetchEventSource(`${import.meta.env.VITE_API_URL}sse`, {
-//       async onopen(response) {
-//         if (response.ok ) {
-//           sseConnectionActive.value = true;
-//             return; // everything's good
-//         } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-//             throw new FatalError();
-//         } else {
-//             throw new RetriableError();
-//         }
-//     },
-//     onmessage(msg) {
-//         notifications.value.push(msg.data);
-//     }
-// });
+    const token = localStorage.getItem('jwtToken')
+    await fetchEventSource(`${import.meta.env.VITE_API_URL}sse`, {
+      async onopen(response) {
+        if (response.ok ) {
+          sseConnectionActive.value = true;
+            return; // everything's good
+        } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+            throw new FatalError();
+        } else {
+            throw new RetriableError();
+        }
+    },
+    onmessage(msg) {
+        notifications.value.push(msg.data);
+    },
+    headers : {
+      Authorization: `Bearer ${token}`
+    }
+});
 
 })
 

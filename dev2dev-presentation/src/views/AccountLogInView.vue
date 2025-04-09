@@ -23,6 +23,7 @@ export default {
                 const data = await response.json();
                 alert('Account authenticated with username: ' + this.formData.username);
                 localStorage.setItem('jwtToken', data.token);
+                window.location.reload()
             } else if (response.status == 401) {
                 alert("Bad credentials");
             } else {
