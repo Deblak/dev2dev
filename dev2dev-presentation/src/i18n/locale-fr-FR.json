@@ -15,5 +15,6 @@
     "urlRequire": "Link is required",
     "urlNotCorrect": "The link is not correct, please try again!",
     "urlExisted":"Link is already exists",
-    "errorServer":"Problem server, please try again later!"
+    "errorServer":"Problem server, please try again later!",
+    "shareArticle": "Share article"
 }
