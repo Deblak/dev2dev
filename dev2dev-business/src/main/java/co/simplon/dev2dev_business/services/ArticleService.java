@@ -1,0 +1,78 @@
+package co.simplon.dev2dev_business.services;
+
+import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
+import co.simplon.dev2dev_business.dtos.ArticleShare;
+import co.simplon.dev2dev_business.entities.Article;
+import co.simplon.dev2dev_business.exceptions.InvalidUrlException;
+import co.simplon.dev2dev_business.repositories.ArticleRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Set;
+
+
+@Service
+public class ArticleService {
+    private final ArticleRepository repository;
+
+    public ArticleService(ArticleRepository repository) {
+        this.repository = repository;
+    }
+
+    @Transactional
+    public void createSharedArticle(ArticleShare inputs) {
+        Document doc = null;
+        String url = inputs.url();
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+//            throw new RuntimeException(e); //this ex will return error 401 maybe because filtre security
+            throw new InvalidUrlException("Url is not correct", e);
+        }
+
+        Elements titleElements = doc.select("meta[property=og:title]");
+        String title = titleElements.attr("content");
+        Elements imgElements = doc.select("meta[property=og:img]");
+        String img = imgElements.attr("content");
+        Elements descElements = doc.select("meta[property=og:description]");
+        String description = descElements.attr("content");
+        Elements authorElements = doc.select("meta[name=author]");
+        String author = authorElements.attr("content");
+        LocalDate sharedAt = LocalDate.now();
+
+        //PROGRAMMATIC VALIDATION
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        ArticleDtoValid articleDto = new ArticleDtoValid(title);
+        Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
+        if (!violations.isEmpty()){
+            //need this part for debug
+//            for (ConstraintViolation<ArticleDtoValid> violation : violations) {
+//                System.out.println("PROGRAMMATIC VALIDATION");
+//                System.out.println(violation.getMessage());
+//                System.out.println("--------------------------");
+//            }
+           throw new ConstraintViolationException(violations);
+        }else {
+            Article article = new Article(url, title, description, img, sharedAt, null, author
+            );
+            repository.save(article);
+        }
+    }
+
+    public boolean existsByUrl(String url){
+        return repository.existsByUrlIgnoreCase(url);
+    }
+}

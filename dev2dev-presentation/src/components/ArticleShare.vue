@@ -31,6 +31,9 @@ export default {
           this.url = ""; // reset
         } else if (response.status == 400) {
           //add handle errors
+          response.json().then((e) => {
+            this.errors.push(e.url || e.title);
+          });
         }
       } catch (error) {
         this.errors.push("errorServer");
