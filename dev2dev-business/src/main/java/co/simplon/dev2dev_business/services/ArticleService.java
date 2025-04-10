@@ -1,5 +1,6 @@
 package co.simplon.dev2dev_business.services;
 
+import co.simplon.dev2dev_business.components.Notification;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShare;
 import co.simplon.dev2dev_business.entities.Article;
@@ -25,9 +26,11 @@ import java.util.Set;
 @Service
 public class ArticleService {
     private final ArticleRepository repository;
+    private final Notification notification;
 
-    public ArticleService(ArticleRepository repository) {
+    public ArticleService(ArticleRepository repository, Notification notification) {
         this.repository = repository;
+        this.notification = notification;
     }
 
     @Transactional
@@ -69,6 +72,7 @@ public class ArticleService {
             Article article = new Article(url, title, description, img, sharedAt, null, author
             );
             repository.save(article);
+            notification.create(article.getTitle());
         }
     }
 
