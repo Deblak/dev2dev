@@ -5,6 +5,7 @@
     "password": "Password",
     "passwordPlaceholder": "Password123!",
     "email": "Email",
+    "emailPlaceholder": "email@email.com",
     "confirm": "Confirm",
     "articleShareTitle": "Share an article",
     "articleShareLabel": "Link",

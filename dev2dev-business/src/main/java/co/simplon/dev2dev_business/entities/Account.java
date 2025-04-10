@@ -14,56 +14,66 @@ import jakarta.persistence.Table;
 @Table(name = "t_accounts")
 public class Account {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-	@Column(name = "username", unique = true, nullable = false)
-	private String username;
+    @Column(name = "username", unique = true, nullable = false)
+    private String username;
 
-	@Column(name = "password", nullable = false)
-	private String password;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Column(name = "email_validate", nullable = false)
+    private boolean emailValidate;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_role", nullable = false)
-	private Role role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role", nullable = false)
+    private Role role;
 
-	@Override
-	public String toString() {
-		return String.format("username=%s", "password=[PORTECTED]", id, username);
-	}
+    public boolean isEmailValidate() {
+	return emailValidate;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setEmailValidate(boolean emailValidate) {
+	this.emailValidate = emailValidate;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public String toString() {
+	return String.format("username=%s", "password=[PORTECTED]", id, username);
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getUsername() {
+	return username;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setUsername(String username) {
+	this.username = username;
+    }
 
-	public Role getRole() {
-		return role;
-	}
+    public String getPassword() {
+	return password;
+    }
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
+    public void setPassword(String password) {
+	this.password = password;
+    }
+
+    public Role getRole() {
+	return role;
+    }
+
+    public void setRole(Role role) {
+	this.role = role;
+    }
 
 }
