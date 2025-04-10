@@ -2,6 +2,8 @@ package co.simplon.dev2dev_business.entities;
 
 import jakarta.persistence.*;
 
+import java.time.OffsetDateTime;
+
 @Entity
 @Table(name = "t_provider")
 public class ProviderEntity {
@@ -20,7 +22,7 @@ public class ProviderEntity {
     private String description;
 
     @Column(name="last_date_updated")
-    private String lastDateUpdated;
+    private OffsetDateTime lastDateUpdated;
 
     public void setId(Integer id) {
         this.id = id;
@@ -54,11 +56,11 @@ public class ProviderEntity {
         this.description = description;
     }
 
-    public String getLastDateUpdated() {
+    public OffsetDateTime getLastDateUpdated() {
         return lastDateUpdated;
     }
 
-    public void setLastDateUpdated(String lastDateUpdated) {
+    public void setLastDateUpdated(OffsetDateTime lastDateUpdated) {
         this.lastDateUpdated = lastDateUpdated;
     }
 }
