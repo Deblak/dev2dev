@@ -34,12 +34,12 @@
 		</div>
 	</div>
 </template>
-
+ 
 <script>
 import "../styles/homeForm.css";
 
 export default {
-	name: "AccountCreate",
+	name: "account-create",
 	data() {
 		return {
 			form: {
@@ -107,7 +107,6 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	min-height: 100vh;
 	text-align: center;
 	padding: 20px;
 }
@@ -139,6 +138,9 @@ export default {
 	}
 	button {
 		width: 100%;
+	}
+	.page {
+		padding: 10px;
 	}
 }
 </style>
