@@ -1,47 +1,51 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { onMounted, ref } from "vue";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const sseConnectionActive = ref(false);
-const notifications = ref([])
+const notifications = ref([]);
 
 onMounted(async () => {
-    console.log("Notification bar monted")
-    const token = localStorage.getItem('jwtToken')
-    await fetchEventSource(`${import.meta.env.VITE_API_URL}sse`, {
-      async onopen(response) {
-        if (response.ok ) {
-          sseConnectionActive.value = true;
-            return; // everything's good
-        } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-            throw new FatalError();
-        } else {
-            throw new RetriableError();
-        }
+  console.log("Notification bar monted");
+  const token = localStorage.getItem("jwtToken");
+  await fetchEventSource(`http://localhost:8080/sse`, {
+    async onopen(response) {
+      if (response.ok) {
+        sseConnectionActive.value = true;
+        return; // everything's good
+      } else if (
+        response.status >= 400 &&
+        response.status < 500 &&
+        response.status !== 429
+      ) {
+        throw new FatalError();
+      } else {
+        throw new RetriableError();
+      }
     },
     onmessage(msg) {
-        notifications.value.push(msg.data);
+      notifications.value.push(msg.data);
     },
-    headers : {
-      Authorization: `Bearer ${token}`
-    }
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 });
-
-})
-
 </script>
 
 <template>
   <div class="notification-bell clicable">
     <span class="material-symbols-outlined">notifications</span>
-    <p class="notification-count" v-if="notifications.length < 10">{{ notifications.length }}</p>
-    <p class="notification-count-max" v-else >9+</p>
+    <p class="notification-count" v-if="notifications.length < 10">
+      {{ notifications.length }}
+    </p>
+    <p class="notification-count-max" v-else>9+</p>
     <div class="notification-count-bg"></div>
   </div>
 </template>
 
 <style scoped>
-
 .notification-count-bg {
   position: absolute;
   background-color: white;
@@ -73,9 +77,9 @@ onMounted(async () => {
 
 .material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 40
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 40;
 }
 </style>

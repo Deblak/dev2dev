@@ -8,9 +8,7 @@ import co.simplon.dev2dev_business.exceptions.InvalidUrlException;
 import co.simplon.dev2dev_business.repositories.ArticleRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -27,10 +25,12 @@ import java.util.Set;
 public class ArticleService {
     private final ArticleRepository repository;
     private final Notification notification;
+    private final Validator validator;
 
-    public ArticleService(ArticleRepository repository, Notification notification) {
+    public ArticleService(ArticleRepository repository, Notification notification, Validator validator) {
         this.repository = repository;
         this.notification = notification;
+        this.validator = validator;
     }
 
     @Transactional
@@ -53,10 +53,6 @@ public class ArticleService {
         Elements authorElements = doc.select("meta[name=author]");
         String author = authorElements.attr("content");
         LocalDate sharedAt = LocalDate.now();
-
-        //PROGRAMMATIC VALIDATION
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
         Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
