@@ -33,13 +33,12 @@ public class LoginService {
 	String username = inputs.username();
 	Account entity = repository.findByUsernameIgnoreCase(username)
 		.orElseThrow(() -> new BadCredentialsException(username));
-	System.out.println(entity);
 	String password = inputs.password();
 	String encoded = entity.getPassword();
 
 	Role role = entity.getRole();
 	if (role == null) {
-	    role = roleRepository.findByName("ROLE_Member")
+	    role = roleRepository.findByName("ROLE_MEMBER")
 		    .orElseThrow(() -> new IllegalStateException("Role not found"));
 	}
 	String roleName = role.getName();
