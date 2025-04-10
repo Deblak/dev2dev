@@ -11,7 +11,3 @@ CREATE TABLE t_accounts (
 	CONSTRAINT t_accounts_ukey UNIQUE(username),
 	CONSTRAINT fkey_role_name FOREIGN KEY(id_role) REFERENCES t_roles(id)
 );
-
-
-    
-    
