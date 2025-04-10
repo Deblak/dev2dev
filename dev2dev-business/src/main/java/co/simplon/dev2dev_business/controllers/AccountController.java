@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.simplon.dev2dev_business.dtos.AccountCreateDto;
+import co.simplon.dev2dev_business.dtos.AccountLoginDto;
 import co.simplon.dev2dev_business.services.AccountService;
 import jakarta.validation.Valid;
 
@@ -15,23 +16,29 @@ import jakarta.validation.Valid;
 @RequestMapping("/accounts")
 public class AccountController {
 
-	private final AccountService accountService;
+    private final AccountService accountService;
 
-	public AccountController(AccountService accountService) {
-		this.accountService = accountService;
+    public AccountController(AccountService accountService) {
+	this.accountService = accountService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public String create(@Valid @RequestBody AccountCreateDto accountCreateDto) {
+	try {
+
+	    accountService.create(accountCreateDto);
+
+	    return "Account created successfully !";
+	} catch (Exception exception) {
+	    return "Error creating account : " + exception.getMessage();
 	}
+    }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public String create(@Valid @RequestBody AccountCreateDto accountCreateDto) {
-		try {
-
-			accountService.create(accountCreateDto, accountCreateDto.roles());
-
-			return "Compte créé avec succès !";
-		} catch (Exception exception) {
-			return "Erreur lors de la création du compte : " + exception.getMessage();
-		}
-	}
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    Object authentificated(@RequestBody AccountLoginDto inputs) {
+	return accountService.LoginResponseDto(inputs);
+    }
 
 }
