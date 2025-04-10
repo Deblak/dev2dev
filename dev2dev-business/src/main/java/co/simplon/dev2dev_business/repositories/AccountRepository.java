@@ -13,4 +13,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	boolean existsByUsernameIgnoreCase(String username);
 
+	Optional<Account> findByUuidToken(String token);
+
 }
