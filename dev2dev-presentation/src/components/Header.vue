@@ -3,16 +3,18 @@ import { onMounted, onUpdated, ref } from 'vue';
 import NotificationBar from './NotificationBar.vue';
 
 const token = ref(null)
+const userRole = ref(null)
 
 onMounted(() => {
     token.value = localStorage.getItem('jwtToken');
+    userRole.value = localStorage.getItem('role')
 })
 </script>
 
 <template>
     <header>
         <h1>Dev2Dev</h1>
-        <div class="notification-bar" v-if="token">
+        <div class="notification-bar" v-if="token && userRole === 'MEMBER'">
             <NotificationBar/>
         </div>
     </header>
