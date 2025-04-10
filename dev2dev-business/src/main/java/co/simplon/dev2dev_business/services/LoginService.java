@@ -46,7 +46,7 @@ public class LoginService {
 	if (passwordEncoder.matches(password, encoded)) {
 	    String token = provider.create(username, Set.of(roleName));
 
-	    return new LoginResponseDto(token, "Authentication successful");
+	    return new LoginResponseDto(token, "Authentication successful", roleName);
 	} else {
 	    throw new BadCredentialsException(username);
 	}
