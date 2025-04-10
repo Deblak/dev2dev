@@ -4,26 +4,32 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class EmailVerificationService {
-    private EmailSender emailService;
+	private EmailSender emailService;
 
-    protected EmailVerificationService(EmailSender emailService) {
-	this.emailService = emailService;
-    }
+	protected EmailVerificationService(EmailSender emailService) {
+		this.emailService = emailService;
+	}
 
-    public String generateVerificationCode() {
-	return String.format("%06d", new Random().nextInt(999999));
-    }
+	public String generateVerificationCode() {
+		return String.format("%06d", new Random().nextInt(999999));
+	}
 
-    public void sendVerificationCode(String email) {
-	String code = generateVerificationCode();
-	emailService.sendEmail(email, "Verification Code",
-		"Please use the following code to complete your login: " + code);
-    }
+	public void sendVerificationCode(String email) {
+		String code = generateVerificationCode();
+		try {
+			emailService.sendEmail(email, "Verification Code",
+					"Please use the following code to complete your login: " + code);
+		} catch (MessagingException exception) {
+			throw new RuntimeException("Failed to verify pin", exception);
+		}
+	}
 
-    public boolean verifyCode(String userEmail, String userEnteredCode, String sentCode) {
-	return sentCode.equals(userEnteredCode);
-    }
+	public boolean verifyCode(String userEmail, String userEnteredCode, String sentCode) {
+		return sentCode.equals(userEnteredCode);
+	}
 
 }

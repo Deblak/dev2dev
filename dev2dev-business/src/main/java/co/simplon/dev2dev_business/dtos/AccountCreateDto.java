@@ -1,9 +1,12 @@
 package co.simplon.dev2dev_business.dtos;
 
-public record AccountCreateDto(Long id, String username, String password) {
+import jakarta.validation.constraints.NotEmpty;
 
-    @Override
-    public String toString() {
-	return String.format("{username=%s,password=[PROTECTED]}", id, username);
-    }
+public record AccountCreateDto(Long id, @NotEmpty(message = "Username cannot be empty") String username,
+		@NotEmpty(message = "Password cannot be empty") String password, String uuidToken) {
+
+	@Override
+	public String toString() {
+		return String.format("{username=%s,password=[PROTECTED]}", id, username);
+	}
 }
