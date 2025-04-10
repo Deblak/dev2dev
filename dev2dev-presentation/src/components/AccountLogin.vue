@@ -35,7 +35,6 @@ export default {
 </script>
 
 <template>
-    <main>
         <form @submit.prevent="submit" novalidate>
             <div>
                 <label for="username">{{ $t('email') }}</label>
@@ -60,7 +59,5 @@ export default {
             <RouterLink to="/create-account">{{ $t('signup') }}</RouterLink>
             <button type="submit">{{ $t('login') }}</button>
         </form>
-    </main>
 </template>
 
-<style scoped src="../styles/login.css"></style>

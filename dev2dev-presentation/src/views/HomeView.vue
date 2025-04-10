@@ -4,18 +4,19 @@
 			<AccountCreate />
 		</div>
 		<div class="home-half">
-			<AccountCreate />
+			<AccountLogin />
 		</div>
 	</div>
 </template>
 
 <script >
 import AccountCreate from "../components/AccountCreate.vue";
+import AccountLogin from "../components/AccountLogin.vue";
 
 export default {
 	name: "home",
 	components: {
-		AccountCreate,
+		AccountCreate, AccountLogin
 	},
 };
 </script>
