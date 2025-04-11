@@ -20,7 +20,9 @@ onMounted(() => {
         $t("shareArticle")
       }}</RouterLink>
       <div class="notification-bar">
-        <RouterLink to="/account-notification-settings"> profil </RouterLink>
+        <RouterLink to="/account-notification-settings"> 
+          <i class="profil mdi mdi-account"></i> 
+        </RouterLink>
         <NotificationBar />
       </div>
     </div>
@@ -38,6 +40,11 @@ header {
   align-items: center;
   justify-content: space-between;
   box-shadow: 1px 1px 15px 1px rgba(0, 0, 0, 0.34);
+}
+
+.profil {
+  color: black;
+  font-size: 28px;
 }
 
 .notification-bar {

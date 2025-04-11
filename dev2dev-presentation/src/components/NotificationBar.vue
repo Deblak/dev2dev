@@ -69,6 +69,7 @@ onMounted(async () => {
 
 .notification-bell {
   position: relative;
+  margin-top: 10px;
 }
 
 .material-symbols-outlined {
