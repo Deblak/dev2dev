@@ -23,7 +23,6 @@
 					</p>
 				</div>
 				<p class="error" v-if="errors.password">{{ errors.password }}</p>
-
 				<button type="submit">Create account</button>
 			</form>
 		</div>
@@ -64,9 +63,7 @@ export default {
 				const response = await fetch(
 					`http://localhost:8080/accounts/validate?token=${token}`
 				);
-
 				if (response.ok) {
-					// Redirection vers login avec message
 					this.$router.push("/accounts/login?validated=true");
 				} else {
 					const error = await response.text();
@@ -75,7 +72,7 @@ export default {
 					);
 				}
 			} catch (err) {
-				this.$router.push("/accounts/login?error=Erreur de validation");
+				this.$router.push("/?error=Erreur de validation");
 			}
 		},
 		async validForm() {
@@ -85,7 +82,6 @@ export default {
 			if (!this.form.username.trim()) {
 				this.errors.username = "Email is required.";
 			}
-
 			if (!this.validPassword(this.form.password)) {
 				this.errors.password =
 					"8 characters min, with one uppercase, one lowercase, one number and one special character.";
@@ -102,12 +98,11 @@ export default {
 							password: this.form.password,
 						}),
 					});
-
 					if (response.ok) {
-						alert("Compte créé! Un email de validation a été envoyé.");
+						alert("Account created! A validation email has been sent.");
 						this.$router.push("/");
 					} else {
-						throw new Error("Erreur lors de la création du compte");
+						throw new Error("Account creation error.");
 					}
 				} catch (error) {
 					console.error(error);
