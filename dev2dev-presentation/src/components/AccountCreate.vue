@@ -2,7 +2,7 @@
 	<div class="page">
 		<h1>CREATE ACCOUNT</h1>
 		<div class="form-container">
-			<form @submit.prevent="validForm">
+			<form @submit.prevent="validForm" >
 				<label>Email*</label>
 				<input
 					type="email"
@@ -23,6 +23,7 @@
 					</p>
 				</div>
 				<p class="error" v-if="errors.password">{{ errors.password }}</p>
+
 				<button type="submit">Create account</button>
 			</form>
 		</div>
@@ -109,6 +110,10 @@ export default {
 				}
 			}
 		},
+		validEmail(email) {
+			const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return regex.test(email);
+		},
 	},
 };
 </script>
@@ -138,6 +143,10 @@ export default {
 .password-container input {
 	width: 100%;
 	position: relative;
+}
+.error {
+	color: red;
+	font-size: 0.9em;
 }
 
 @media (max-width: 600px) {
