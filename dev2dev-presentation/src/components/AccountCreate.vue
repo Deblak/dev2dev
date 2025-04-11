@@ -1,7 +1,6 @@
-<!-- src/components/RegisterForm.vue -->
 <template>
 	<div class="page">
-		<h1>SIGN UP</h1>
+		<h1>CREATE ACCOUNT</h1>
 		<div class="form-container">
 			<form @submit.prevent="validForm">
 				<label>Email*</label>
@@ -24,13 +23,8 @@
 					</p>
 				</div>
 				<p class="error" v-if="errors.password">{{ errors.password }}</p>
-
 				<button type="submit">Create account</button>
 			</form>
-			<p class="already-accou t">
-				Already have an account
-				<a href="/login">Sign In</a>
-			</p>
 		</div>
 	</div>
 </template>
@@ -53,10 +47,33 @@ export default {
 			visiblePassword: false,
 		};
 	},
+	created() {
+		this.handleTokenValidation();
+	},
 	methods: {
-		validPassword(mdp) {
+		validPassword(password) {
 			const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-			return regex.test(mdp);
+			return regex.test(password);
+		},
+		async handleTokenValidation() {
+			const token = this.$route.query.token;
+			if (!token) return;
+
+			try {
+				const response = await fetch(
+					`http://localhost:8080/accounts/validate?token=${token}`
+				);
+				if (response.ok) {
+					this.$router.push("/accounts/login?validated=true");
+				} else {
+					const error = await response.text();
+					this.$router.push(
+						"/accounts/login?error=" + encodeURIComponent(error)
+					);
+				}
+			} catch (err) {
+				this.$router.push("/?error=Erreur de validation");
+			}
 		},
 		async validForm() {
 			this.errors.username = "";
@@ -65,12 +82,10 @@ export default {
 			if (!this.form.username.trim()) {
 				this.errors.username = "Email is required.";
 			}
-
 			if (!this.validPassword(this.form.password)) {
 				this.errors.password =
 					"8 characters min, with one uppercase, one lowercase, one number and one special character.";
 			}
-
 			if (!this.errors.username && !this.errors.password) {
 				try {
 					const response = await fetch("http://localhost:8080/accounts", {
@@ -83,18 +98,14 @@ export default {
 							password: this.form.password,
 						}),
 					});
-					if (!response.ok) {
-						const errorData = await response.json();
-						alert("Error: " + (errorData.message || "Something went wrong."));
-						return;
+					if (response.ok) {
+						alert("Account created! A validation email has been sent.");
+						this.$router.push("/");
+					} else {
+						throw new Error("Account creation error.");
 					}
-
-					alert("Account created successfully!");
-					this.form.username = "";
-					this.form.password = "";
 				} catch (error) {
-					console.error("Network error:", error);
-					alert("Network error. Please try again later.");
+					console.error(error);
 				}
 			}
 		},

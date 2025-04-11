@@ -38,9 +38,44 @@ git clone https://github.com/Deblak/dev2dev.git
 
 2.Create files (on the root)  and custom your environnement variables : `application-dev.properties 
 ```application-dev.properties
-spring.datasource.username=dev2dev_user
-spring.datasource.password=yourpassword
+spring.application.name=dev2dev-business
+
+# Spring properties for local database:
+spring.datasource.url=jdbc:postgresql://localhost:<port>/dev2dev
+spring.datasource.username=<name>
+spring.datasource.password=<password>
 spring.datasource.driver-class-name=org.postgresql.Driver
+
+# CORS
+dev2dev-business.cors.allowedOrigin=http://localhost:<port>
+
+# BCrypt
+dev2dev-business.bcrypt.rounds=12
+
+#Secret Local
+dev2dev-business.jwt.secret=<secret>
+
+#Expiration (exp) in seconds
+dev2dev-business.jwt.exp=<seconds>
+dev2dev-business.jwt.issuer=http://localhost:<port>/
+
+# SMTP/Mail properties:
+dev2dev-business.email.from=<secret>
+spring.mail.host=<secret>
+spring.mail.port=<secret>
+spring.mail.username=<secret>
+spring.mail.password=<secret>
+spring.mail.protocol=<secret>
+spring.mail.properties.mail.smtp.ssl.enable=true
+spring.mail.properties.mail.smtp.auth=true
+dev2dev-business.token.expiration-minutes=<temps en minutes>
+dev2dev-business.email.confirmation-url-base=http://localhost/:<port>/accounts/verify
+dev2dev-business.email.verification-url-back=http://localhost/:<port>/accounts/verify
+
+# Claim custom
+spring.security.oauth2.resourceserver.jwt.authority-prefix=
+spring.security.oauth2.resourceserver.jwt.authorities-claim-name=roles
+
 ```
 
 ```
@@ -97,7 +132,7 @@ Variable template: `VITE_API_URL=http://localhost:<number>/`
 
  - For prod environnement
 File name: `.env.production`
-Variable template: `VITE_API_URL=VITE_API_URL=https://<domain-name>`
+Variable template: `VITE_API_URL=https://<domain-name>`
 
 - For call variable, you can use:
 `const apiUrl = import.meta.env.VITE_API_URL;`

@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
-@Constraint(validatedBy = UniqueUrlValidator.class)
-public @interface UniqueUrl {
-    String message() default "The url is already exits";
+@Constraint(validatedBy = UniqueLinkValidator.class)
+public @interface UniqueLink {
+    String message() default "The link is already exits";
 
     Class<?>[] groups() default {};
 

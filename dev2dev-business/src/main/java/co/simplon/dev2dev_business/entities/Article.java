@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "t_articles")
@@ -23,8 +24,8 @@ public class Article {
         this.id = id;
     }
 
-    @Column(name = "url")
-    private String url;
+    @Column(name = "link")
+    private String link;
 
     @Column(name = "title")
     private String title;
@@ -39,27 +40,24 @@ public class Article {
     private LocalDate sharedAt;
 
     @Column(name = "published_date")
-    private LocalDate publishedDate;
-
-    @Column(name = "author")
-    private String author;
+    private OffsetDateTime publishedDate;
 
     public Article() {
         //ORM
     }
 
-    public Article(String url, String title, String description, String image, LocalDate sharedAt, LocalDate publishedDate, String author) {
-        this.url = url;
+    public Article(Long id, String link, String title, String description, String image, LocalDate sharedAt, OffsetDateTime publishedDate) {
+        this.id = id;
+        this.link = link;
         this.title = title;
         this.description = description;
         this.image = image;
         this.sharedAt = sharedAt;
         this.publishedDate = publishedDate;
-        this.author = author;
     }
 
-    public String getUrl() {
-        return url;
+    public String getLink() {
+        return link;
     }
 
     public String getTitle() {
@@ -70,6 +68,14 @@ public class Article {
         return description;
     }
 
+    public OffsetDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(OffsetDateTime publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public String getImage() {
         return image;
     }
@@ -78,16 +84,8 @@ public class Article {
         return sharedAt;
     }
 
-    public LocalDate getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public void setTitle(String title) {
@@ -106,24 +104,15 @@ public class Article {
         this.sharedAt = sharedAt;
     }
 
-    public void setPublishedDate(LocalDate publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     @Override
     public String toString() {
         return "Article{" +
-                "url='" + url + '\'' +
+                "link='" + link + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", sharedAt=" + sharedAt +
                 ", publishedDate=" + publishedDate +
-                ", author='" + author + '\'' +
                 '}';
     }
 }

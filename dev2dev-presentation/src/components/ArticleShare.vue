@@ -1,7 +1,7 @@
 <script>
 export default {
   data() {
-    return { errors: [], url: "", successMsg: "" };
+    return { errors: [], link: "", successMsg: "" };
   },
   methods: {
     setSuccessMsg(message) {
@@ -9,10 +9,10 @@ export default {
     },
     async checkForm(e) {
       this.errors = [];
-      if (!this.url) {
-        this.errors.push("urlRequire");
-      } else if (!this.isValidURL(this.url)) {
-        this.errors.push("urlNotValid");
+      if (!this.link) {
+        this.errors.push("linkRequire");
+      } else if (!this.isValidLink(this.link)) {
+        this.errors.push("linkNotValid");
       }
       if (this.errors.length > 0) {
         return;
@@ -24,22 +24,22 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ url: this.url }),
+          body: JSON.stringify({ link: this.link }),
         });
         if (response.ok) {
           this.setSuccessMsg(this.$t("articleSharedSuccess"));
-          this.url = ""; // reset
+          this.link = ""; // reset
         } else if (response.status == 400) {
           //add handle errors
           response.json().then((e) => {
-            this.errors.push(e.url || e.title);
+            this.errors.push(e.link || e.title);
           });
         }
       } catch (error) {
         this.errors.push("errorServer");
       }
     },
-    isValidURL(str) {
+    isValidLink(str) {
       try {
         new URL(str);
         return true;
@@ -58,8 +58,8 @@ export default {
       <p v-if="successMsg">{{ successMsg }}</p>
       <form @submit.prevent="checkForm" novalidate>
         <div>
-          <label for="url">{{ $t("articleShareLabel") }} </label>
-          <input type="url" name="url" id="url" v-model="url" />
+          <label for="link">{{ $t("articleShareLabel") }} </label>
+          <input type="link" name="link" id="link" v-model="link" />
         </div>
         <p v-for="error in errors" class="message-error" v-if="errors">
           <!-- {{ error }} -->

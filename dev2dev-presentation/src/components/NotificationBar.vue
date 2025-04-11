@@ -1,9 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { onMounted, ref } from "vue";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const sseConnectionActive = ref(false);
-const notifications = ref([])
+const notifications = ref([]);
 
 onMounted(async () => {
     const token = localStorage.getItem('jwtToken')
@@ -24,23 +25,23 @@ onMounted(async () => {
     headers : {
       Authorization: `Bearer ${token}`
     }
+
 });
-
 })
-
 </script>
 
 <template>
   <div class="notification-bell clicable">
     <span class="material-symbols-outlined">notifications</span>
-    <p class="notification-count" v-if="notifications.length < 10">{{ notifications.length }}</p>
-    <p class="notification-count-max" v-else >9+</p>
+    <p class="notification-count" v-if="notifications.length < 10">
+      {{ notifications.length }}
+    </p>
+    <p class="notification-count-max" v-else>9+</p>
     <div class="notification-count-bg"></div>
   </div>
 </template>
 
 <style scoped>
-
 .notification-count-bg {
   position: absolute;
   background-color: white;
@@ -72,9 +73,9 @@ onMounted(async () => {
 
 .material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 40
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 40;
 }
 </style>

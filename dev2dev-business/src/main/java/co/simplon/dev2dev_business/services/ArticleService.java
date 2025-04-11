@@ -3,13 +3,11 @@ package co.simplon.dev2dev_business.services;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShare;
 import co.simplon.dev2dev_business.entities.Article;
-import co.simplon.dev2dev_business.exceptions.InvalidUrlException;
+import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
 import co.simplon.dev2dev_business.repositories.ArticleRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -25,20 +23,22 @@ import java.util.Set;
 @Service
 public class ArticleService {
     private final ArticleRepository repository;
+    private final Validator validator;
 
-    public ArticleService(ArticleRepository repository) {
+    public ArticleService(ArticleRepository repository, Validator validator) {
         this.repository = repository;
+        this.validator = validator;
     }
 
     @Transactional
     public void createSharedArticle(ArticleShare inputs) {
         Document doc = null;
-        String url = inputs.url();
+        String link = inputs.link();
         try {
-            doc = Jsoup.connect(url).get();
+            doc = Jsoup.connect(link).get();
         } catch (IOException e) {
 //            throw new RuntimeException(e); //this ex will return error 401 maybe because filtre security
-            throw new InvalidUrlException("Url is not correct", e);
+            throw new ArticleShareLinkException("Link is not correct", e);
         }
 
         Elements titleElements = doc.select("meta[property=og:title]");
@@ -47,13 +47,7 @@ public class ArticleService {
         String img = imgElements.attr("content");
         Elements descElements = doc.select("meta[property=og:description]");
         String description = descElements.attr("content");
-        Elements authorElements = doc.select("meta[name=author]");
-        String author = authorElements.attr("content");
         LocalDate sharedAt = LocalDate.now();
-
-        //PROGRAMMATIC VALIDATION
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
         Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
@@ -66,13 +60,18 @@ public class ArticleService {
 //            }
            throw new ConstraintViolationException(violations);
         }else {
-            Article article = new Article(url, title, description, img, sharedAt, null, author
-            );
+            Article article = new Article();
+            article.setLink(link);
+            article.setTitle(title);
+            article.setDescription(description);
+            article.setImage(img);
+            article.setSharedAt(sharedAt);
+            article.setPublishedDate(null);
             repository.save(article);
         }
     }
 
-    public boolean existsByUrl(String url){
-        return repository.existsByUrlIgnoreCase(url);
+    public boolean existsByLink(String link){
+        return repository.existsByLinkIgnoreCase(link);
     }
 }

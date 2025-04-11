@@ -1,0 +1,46 @@
+DROP TABLE IF EXISTS t_articles;
+DROP TABLE IF EXISTS t_verification_tokens;
+DROP TABLE IF EXISTS t_accounts;
+DROP TABLE IF EXISTS t_roles;
+
+CREATE TABLE t_roles(
+	id int GENERATED ALWAYS AS IDENTITY,
+	name varchar(10),
+	role_default boolean,
+	CONSTRAINT t_role_pkey PRIMARY KEY (id),
+	CONSTRAINT t_role_name_ukey UNIQUE (name)
+);
+
+CREATE TABLE t_accounts (
+	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	username VARCHAR(255) NOT NULL,
+	password VARCHAR(72) NOT NULL,
+	email_validate BOOLEAN NOT NULL,
+	uuid_token VARCHAR(255),
+	expiration_token TIMESTAMP,
+	id_role INT NOT NULL,
+	CONSTRAINT t_id_accounts_pkey PRIMARY KEY(id), 
+	CONSTRAINT t_accounts_ukey UNIQUE(username),
+	CONSTRAINT fkey_role_name FOREIGN KEY(id_role) REFERENCES t_roles(id)
+);
+
+CREATE TABLE t_verification_tokens (
+	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id_username INT NOT NULL,
+	code_pin CHAR(4),
+	verification_exp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT t_verification_tokens_pkey PRIMARY KEY(id), 
+	CONSTRAINT fkey_account_username FOREIGN KEY(id_username) REFERENCES t_accounts(id)
+);
+
+CREATE TABLE t_articles(
+	id INT GENERATED ALWAYS AS IDENTITY,
+	url varchar(2300) NOT NULL, --The maximum length of a URL in the address bar is 2048
+	title varchar(225) NOT NULL, --recommand 55-60
+	description varchar(1000),		--recommand 200
+	image varchar(2300),
+	shared_at TIMESTAMP,
+	published_date TIMESTAMP,
+	author varchar(225)
+	--user_id INT NOT NULL
+);

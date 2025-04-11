@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import("../components/AccountCreate.vue"),
     },
     {
+      path: "/accounts/login",
+      name: "login",
+      component: () => import("../components/AccountLogin.vue"),
+    },
+    {
       path: "/:notFound",
       name: "not-found",
       component: () => import("../views/errors/PageNotFoundView.vue"),
@@ -28,7 +33,20 @@ const router = createRouter({
       name: "account-notification-settings",
       component: () => import("../views/AccountNotificationSetings.vue"),
     },
+    {
+      path: "/verification-code",
+      name: "verification-code",
+      component: () => import("../views/EmailVericationCodeView.vue"),
+    }
   ],
+});
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem("jwtToken");
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next("/");
+  }
+
+  next();
 });
 
 export default router;

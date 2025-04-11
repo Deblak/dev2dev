@@ -6,6 +6,8 @@ CREATE TABLE t_accounts (
 	username VARCHAR(255) NOT NULL,
 	password VARCHAR(72) NOT NULL,
 	email_validate BOOLEAN NOT NULL,
+	uuid_token VARCHAR(255),
+	expiration_token TIMESTAMP,
 	id_role INT NOT NULL,
 	CONSTRAINT t_id_accounts_pkey PRIMARY KEY(id), 
 	CONSTRAINT t_accounts_ukey UNIQUE(username),
