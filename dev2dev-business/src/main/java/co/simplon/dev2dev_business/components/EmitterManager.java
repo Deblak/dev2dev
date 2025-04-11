@@ -21,14 +21,18 @@ public class EmitterManager {
 
     public SseEmitter subscribe()  {
         String userEmail = JwtHelper.getSubject();
-        var emitter = new SseEmitter(-1L);
-        emitterMap.put(userEmail, emitter);
-        emitter.onCompletion(() -> emitterMap.remove(userEmail));
-        emitter.onTimeout(() -> {
-            emitter.complete();
-            emitterMap.remove(userEmail);
-        });
-        return emitter;
+        if (emitterMap.containsKey(userEmail)) {
+            return emitterMap.get(userEmail);
+        } else {
+            var emitter = new SseEmitter(-1L);
+            emitterMap.put(userEmail, emitter);
+            emitter.onCompletion(() -> emitterMap.remove(userEmail));
+            emitter.onTimeout(() -> {
+                emitter.complete();
+                emitterMap.remove(userEmail);
+            });
+            return emitter;
+        }
     }
 
     @Async

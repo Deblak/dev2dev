@@ -30,7 +30,10 @@ async function submit() {
 
     })
     const data = await response.json()
-    options.value = data;
+    if (response.status === 200) {
+        alert("settings save");
+        options.value = data;
+    }
 }
 
 </script>
@@ -38,7 +41,7 @@ async function submit() {
 <template>
     <h5>Notification settings:</h5>
     <form @submit.prevent="submit" novalidate>
-        <div v-for="(val, key) in options">
+        <div v-for="(val, key) in options" class="account-setting-input">
             <label for="key">{{ key }}</label>
             <input id="key" type="checkbox" :checked="val" @click="handleClick(key)">
         </div>
@@ -47,5 +50,11 @@ async function submit() {
 
 </template>
 
-<style>
+<style scoped>
+.account-setting-input {
+    max-width: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 </style>
