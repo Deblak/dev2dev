@@ -16,7 +16,7 @@ onMounted(() => {
   <header>
     <h1>Dev2Dev</h1>
 
-    <div class="menu">
+    <div class="menu" v-if="token && userRole === 'MEMBER'">
       <button class="margin-btn">
         <RouterLink to="/article-share" class="text-decoration-none">{{
           $t("shareArticle")

@@ -1,7 +1,9 @@
 DROP TABLE IF EXISTS t_articles;
 DROP TABLE IF EXISTS t_verification_tokens;
+DROP TABLE IF EXISTS t_articles_accounts;
 DROP TABLE IF EXISTS t_accounts;
 DROP TABLE IF EXISTS t_roles;
+DROP TABLE IF EXISTS t_articles;
 
 CREATE TABLE t_roles(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -35,12 +37,21 @@ CREATE TABLE t_verification_tokens (
 
 CREATE TABLE t_articles(
 	id INT GENERATED ALWAYS AS IDENTITY,
-	url varchar(2300) NOT NULL, --The maximum length of a URL in the address bar is 2048
+	link varchar(2300) NOT NULL, --The maximum length of a URL in the address bar is 2048
 	title varchar(225) NOT NULL, --recommand 55-60
-	description varchar(1000),		--recommand 200
+	description TEXT,			--recommand 200
 	image varchar(2300),
-	shared_at TIMESTAMP,
 	published_date TIMESTAMP,
-	author varchar(225)
-	--user_id INT NOT NULL
+	CONSTRAINT t_articles_pkey PRIMARY KEY (id),
+	CONSTRAINT t_articles_link_unique UNIQUE (link) 
+);
+
+CREATE TABLE t_articles_accounts(
+		id INT GENERATED ALWAYS AS IDENTITY,
+		article_id int NOT NULL,
+		account_id int NOT NULL,
+		shared_at TIMESTAMP NOT null,
+		CONSTRAINT t_articles_accounts_articles_fkey FOREIGN KEY (article_id) REFERENCES t_articles(id),
+		CONSTRAINT t_articles_accounts_accounts_fkey FOREIGN KEY (account_id) REFERENCES t_accounts(id),
+		CONSTRAINT t_articles_accounts_unique UNIQUE (article_id, account_id)
 );
