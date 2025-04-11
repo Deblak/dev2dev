@@ -1,7 +1,10 @@
-DROP TABLE IF EXISTS t_articles;
+DROP TABLE IF EXISTS t_account_notification_type;
 DROP TABLE IF EXISTS t_verification_tokens;
 DROP TABLE IF EXISTS t_accounts;
+DROP TABLE IF EXISTS t_articles;
 DROP TABLE IF EXISTS t_roles;
+DROP TABLE IF EXISTS t_notification_types;
+
 
 CREATE TABLE t_roles(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -43,4 +46,19 @@ CREATE TABLE t_articles(
 	published_date TIMESTAMP,
 	author varchar(225)
 	--user_id INT NOT NULL
+);
+
+CREATE TABLE t_notification_types(
+	id bigint GENERATED ALWAYS AS IDENTITY,
+	type_name varchar(50) NOT NULL,
+	CONSTRAINT notification_type_pkey PRIMARY KEY(id),
+	CONSTRAINT notification_type_ukey UNIQUE(type_name)
+);
+
+CREATE TABLE t_account_notification_type(
+	account_id bigint,
+	notification_type_id bigint,
+	CONSTRAINT account_notification_pkey PRIMARY KEY(account_id,notification_type_id),
+	CONSTRAINT account_fkey FOREIGN KEY(account_id) REFERENCES t_accounts(id) ON DELETE CASCADE,
+	CONSTRAINT notification_type_fkey FOREIGN KEY(notification_type_id) REFERENCES t_notification_types(id) ON DELETE CASCADE
 );
