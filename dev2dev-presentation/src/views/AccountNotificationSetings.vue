@@ -36,7 +36,6 @@ async function submit() {
 </script>
 
 <template>
-    <h1>ha que coucou</h1>
     <h5>Notification settings:</h5>
     <form @submit.prevent="submit" novalidate>
         <div v-for="(val, key) in options">
