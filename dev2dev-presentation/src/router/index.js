@@ -28,7 +28,26 @@ const router = createRouter({
       name: "article-share",
       component: () => import("../views/ArticleShareView.vue"),
     },
+    {
+      path: "/verification-code",
+      name: "verification-code",
+      component: () => import("../views/EmailVericationCodeView.vue"),
+    },
+    {
+      path: '/secure-page',
+      name: 'SecurePage',
+      component: () => import('../views/SecurePage.vue'),
+      meta: { requiresAuth: true }
+    }
   ],
+});
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('jwtToken');
+  if (to.meta.requiresAuth && !isAuthenticated) {
+      return next('/');
+  }
+
+  next();
 });
 
 export default router;

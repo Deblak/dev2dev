@@ -16,5 +16,7 @@
     "urlNotCorrect": "The link is not correct, please try again!",
     "urlExisted":"Link is already exists",
     "errorServer":"Problem server, please try again later!",
-    "shareArticle": "Share article"
+    "shareArticle": "Share article",
+    "verificationCode": "Enter code",
+    "verificationCodeInfo":"Please enter the verification code (sending by email) to continue your login."
 }

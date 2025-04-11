@@ -13,7 +13,7 @@ public class UniqueUrlValidator implements ConstraintValidator<UniqueUrl, String
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context){
-        System.out.println("value=" + value);
+        //System.out.println("value=" + value);
         if (value == null){
             return true;
         }
