@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS t_accounts;
 DROP TABLE IF EXISTS t_roles;
 DROP TABLE IF EXISTS t_notification_types;
 DROP TABLE IF EXISTS t_articles;
+DROP TABLE IF EXISTS t_provider;
 
 CREATE TABLE t_roles(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -43,8 +44,6 @@ CREATE TABLE t_articles(
 	description TEXT,			--recommand 200
 	image varchar(2300),
 	published_date TIMESTAMP,
-	author varchar(225),
-	--user_id INT NOT NULL
 	CONSTRAINT t_articles_pkey PRIMARY KEY (id),
 	CONSTRAINT t_articles_link_unique UNIQUE (link) 
 );
