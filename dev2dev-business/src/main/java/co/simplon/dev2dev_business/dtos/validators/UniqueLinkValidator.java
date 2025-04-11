@@ -17,6 +17,6 @@ public class UniqueLinkValidator implements ConstraintValidator<UniqueLink, Stri
         if (value == null){
             return true;
         }
-        return !service.existsByUrl(value);
+        return !service.existsByLink(value);
     }
 }

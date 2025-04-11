@@ -9,28 +9,28 @@ const notifications = ref([]);
 onMounted(async () => {
   console.log("Notification bar monted");
   const token = localStorage.getItem("jwtToken");
-  await fetchEventSource(`http://localhost:8080/sse`, {
-    async onopen(response) {
-      if (response.ok) {
-        sseConnectionActive.value = true;
-        return; // everything's good
-      } else if (
-        response.status >= 400 &&
-        response.status < 500 &&
-        response.status !== 429
-      ) {
-        throw new FatalError();
-      } else {
-        throw new RetriableError();
-      }
-    },
-    onmessage(msg) {
-      notifications.value.push(msg.data);
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  // await fetchEventSource(`http://localhost:8080/sse`, {
+  //   async onopen(response) {
+  //     if (response.ok) {
+  //       sseConnectionActive.value = true;
+  //       return; // everything's good
+  //     } else if (
+  //       response.status >= 400 &&
+  //       response.status < 500 &&
+  //       response.status !== 429
+  //     ) {
+  //       throw new FatalError();
+  //     } else {
+  //       throw new RetriableError();
+  //     }
+  //   },
+  //   onmessage(msg) {
+  //     notifications.value.push(msg.data);
+  //   },
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
 });
 </script>
 
