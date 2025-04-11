@@ -22,7 +22,6 @@ public class EmailSender {
 	public void sendEmail(String to, String subject, String htmlText) throws MessagingException {
 
 		MimeMessage message = mailSender.createMimeMessage();
-
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 		helper.setFrom(sender);

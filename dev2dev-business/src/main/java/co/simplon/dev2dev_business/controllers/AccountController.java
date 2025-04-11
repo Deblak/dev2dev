@@ -52,14 +52,14 @@ public class AccountController {
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
 			out.println("<script>");
-			out.println("window.location.href = 'http://localhost:5173/accounts/login?validation=success';");
+			out.println("window.location.href = 'http://localhost:5173/?validation=success';");
 			out.println("</script>");
 			out.flush();
 		} catch (Exception e) {
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
 			out.println("<script>");
-			out.println("window.location.href = 'http://localhost:5173/accounts/login?validation=error';");
+			out.println("window.location.href = 'http://localhost:5173/?validation=error';");
 			out.println("</script>");
 			out.flush();
 		}
