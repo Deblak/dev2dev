@@ -1,8 +1,5 @@
 package co.simplon.dev2dev_business.services;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -39,15 +36,15 @@ import jakarta.mail.MessagingException;
 @Service
 public class AccountService {
 
-    private final AccountRepository accountsRepo;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder encoder;
-    private final JwtProvider jwtProvider;
+	private final AccountRepository accountsRepo;
+	private final RoleRepository roleRepository;
+	private final PasswordEncoder encoder;
+	private final JwtProvider jwtProvider;
 	private final EmailVerificationService email;
 	private final NotificationTypeRepository notificationTypeRepository;
-    private final EmailSender emailSender;
-    private final EmailVerificationService emailVerificationService;
-    private final VerificationTokenRepository verificationTokenRepository;
+	private final EmailSender emailSender;
+	private final EmailVerificationService emailVerificationService;
+	private final VerificationTokenRepository verificationTokenRepository;
 
 	@Value("${dev2dev-business.token.expiration-minutes}")
 	private long tokenExpMinutes;
@@ -58,31 +55,35 @@ public class AccountService {
 	@Value("${dev2dev-business.email.verification-url-back}")
 	private String verificationUrlBack;
 
-    protected AccountService(AccountRepository accountsRepo, RoleRepository roleRepository, PasswordEncoder encoder,
-	JwtProvider jwtProvider, EmailSender emailSender, EmailVerificationService emailVerificationService,
-	VerificationTokenRepository verificationTokenRepository) {
-	this.accountsRepo = accountsRepo;
-	this.roleRepository = roleRepository;
-	this.encoder = encoder;
-	this.jwtProvider = jwtProvider;
-	this.emailSender = emailSender;
-	this.emailVerificationService = emailVerificationService;
-	this.verificationTokenRepository = verificationTokenRepository;
-    }
+	public AccountService(AccountRepository accountsRepo, RoleRepository roleRepository, PasswordEncoder encoder,
+			JwtProvider jwtProvider, EmailVerificationService email,
+			NotificationTypeRepository notificationTypeRepository, EmailSender emailSender,
+			EmailVerificationService emailVerificationService,
+			VerificationTokenRepository verificationTokenRepository) {
+		this.accountsRepo = accountsRepo;
+		this.roleRepository = roleRepository;
+		this.encoder = encoder;
+		this.jwtProvider = jwtProvider;
+		this.email = email;
+		this.notificationTypeRepository = notificationTypeRepository;
+		this.emailSender = emailSender;
+		this.emailVerificationService = emailVerificationService;
+		this.verificationTokenRepository = verificationTokenRepository;
+	}
 
 	@Transactional
 	public void create(AccountCreateDto inputs) {
 
-	if (inputs.username() == null || inputs.username().trim().isEmpty()) {
-		throw new IllegalArgumentException("Username cannot be empty.");
-	}
-	if (accountsRepo.findByUsernameIgnoreCase(inputs.username()).isPresent()) {
-		throw new IllegalArgumentException("The user with that name already exists.");
-	}
-	Account entity = new Account();
-	entity.setUsername(inputs.username());
-	String encodedPassword = encoder.encode(inputs.password());
-	entity.setPassword(encodedPassword);
+		if (inputs.username() == null || inputs.username().trim().isEmpty()) {
+			throw new IllegalArgumentException("Username cannot be empty.");
+		}
+		if (accountsRepo.findByUsernameIgnoreCase(inputs.username()).isPresent()) {
+			throw new IllegalArgumentException("The user with that name already exists.");
+		}
+		Account entity = new Account();
+		entity.setUsername(inputs.username());
+		String encodedPassword = encoder.encode(inputs.password());
+		entity.setPassword(encodedPassword);
 
 		Role role;
 		role = roleRepository.findByName("MEMBER")

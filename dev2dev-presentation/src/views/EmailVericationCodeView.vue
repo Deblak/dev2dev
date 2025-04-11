@@ -55,20 +55,18 @@ export default {
 		</p>
 		<form @submit.prevent="submit">
 			<label for="code">{{ $t("verificationCode") }}</label>
-			<div class="code-input-container">
-				<input
-					v-for="index in 4"
-					:key="index"
-					v-model="code[index - 1]"
-					type="text"
-					maxlength="1"
-					class="one-time-code"
-					inputmode="numeric"
-					required
-					ref="codeInput"
-					@input="handleCodeInput(index)"
-				/>
-			</div>
+			<input
+				id="code"
+				v-model="code"
+				type="text"
+				class="one-time-code"
+				inputmode="numeric"
+				required
+				ref="codeInput"
+				@input="handleCodeInput"
+				maxlength="4"
+			/>
+
 			<button type="submit">{{ $t("confirm") }}</button>
 		</form>
 	</main>
