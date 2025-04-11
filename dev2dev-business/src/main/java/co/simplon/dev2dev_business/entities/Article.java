@@ -36,9 +36,6 @@ public class Article {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "shared_at")
-    private LocalDate sharedAt;
-
     @Column(name = "published_date")
     private OffsetDateTime publishedDate;
 
@@ -46,13 +43,12 @@ public class Article {
         //ORM
     }
 
-    public Article(Long id, String link, String title, String description, String image, LocalDate sharedAt, OffsetDateTime publishedDate) {
+    public Article(Long id, String link, String title, String description, String image, OffsetDateTime publishedDate) {
         this.id = id;
         this.link = link;
         this.title = title;
         this.description = description;
         this.image = image;
-        this.sharedAt = sharedAt;
         this.publishedDate = publishedDate;
     }
 
@@ -80,10 +76,6 @@ public class Article {
         return image;
     }
 
-    public LocalDate getSharedAt() {
-        return sharedAt;
-    }
-
     public void setLink(String link) {
         this.link = link;
     }
@@ -100,10 +92,6 @@ public class Article {
         this.image = image;
     }
 
-    public void setSharedAt(LocalDate sharedAt) {
-        this.sharedAt = sharedAt;
-    }
-
     @Override
     public String toString() {
         return "Article{" +
@@ -111,7 +99,6 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
-                ", sharedAt=" + sharedAt +
                 ", publishedDate=" + publishedDate +
                 '}';
     }
