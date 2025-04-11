@@ -47,7 +47,7 @@ export default {
                     name="username"
                     id="username"
                     v-model="formData.username"
-                    :placeholder="$t('emailPlaceholder')"
+                    :placeholder="'email@mail.com'"
                 />
             </div>
             <div>

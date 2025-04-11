@@ -13,8 +13,13 @@ onMounted(() => {
 
 <template>
     <header>
-        <h1>Dev2Dev</h1>
+        <a href="/" class="profil-pic">
+            <h1>Dev2Dev</h1>
+        </a>
         <div class="notification-bar" v-if="token && userRole === 'MEMBER'">
+            <a href="/account-notification-settings">
+                profil
+            </a>
             <NotificationBar/>
         </div>
     </header>
@@ -32,6 +37,14 @@ header {
     align-items: center;
     justify-content: space-between;
     box-shadow: 1px 1px 15px 1px rgba(0,0,0,0.34);
+}
+
+.notification-bar {
+    display: flex;
+}
+
+a {
+    margin-right: 50px;
 }
 
 </style>

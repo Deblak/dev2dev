@@ -1,14 +1,11 @@
 package co.simplon.dev2dev_business.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringJoiner;
 
 @Entity
 @Table(name = "t_accounts")
@@ -31,17 +28,21 @@ public class Account {
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "t_account_notification_type",
+    joinColumns = @JoinColumn(name = "account_id"),
+    inverseJoinColumns = @JoinColumn(name = "notification_type_id"))
+    private Set<NotificationType> notificationTypeSet = new HashSet<>();
+
+    public Account() {
+    }
+
     public boolean isEmailValidate() {
 	return emailValidate;
     }
 
     public void setEmailValidate(boolean emailValidate) {
 	this.emailValidate = emailValidate;
-    }
-
-    @Override
-    public String toString() {
-	return String.format("username=%s", "password=[PORTECTED]", id, username);
     }
 
     public Long getId() {
@@ -76,4 +77,27 @@ public class Account {
 	this.role = role;
     }
 
+    public Set<NotificationType> getNotificationTypeSet() {
+        return Collections.unmodifiableSet(notificationTypeSet);
+    }
+
+    public void addNotificationType(NotificationType notificationType) {
+        this.notificationTypeSet.add(notificationType);
+    }
+
+    public void removeNotificationType(NotificationType notificationType) {
+        this.notificationTypeSet.remove(notificationType);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Account.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("username='" + username + "'")
+                .add("password=[PROTECTED]")
+                .add("emailValidate=" + emailValidate)
+                .add("role=" + role)
+                .add("notificationTypeSet=" + notificationTypeSet)
+                .toString();
+    }
 }

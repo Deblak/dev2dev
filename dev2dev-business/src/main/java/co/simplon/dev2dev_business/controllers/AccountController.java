@@ -1,16 +1,15 @@
 package co.simplon.dev2dev_business.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import co.simplon.dev2dev_business.dtos.AccountCreateDto;
 import co.simplon.dev2dev_business.dtos.AccountLoginDto;
 import co.simplon.dev2dev_business.services.AccountService;
 import jakarta.validation.Valid;
+
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/accounts")
@@ -39,6 +38,18 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     Object authentificated(@RequestBody AccountLoginDto inputs) {
 	return accountService.LoginResponseDto(inputs);
+    }
+
+    @GetMapping("/notification-type")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Boolean> getAccountNotificationType() {
+        return accountService.getAccountNotificationType();
+    }
+
+    @PatchMapping("/notification-type")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Boolean> updateAccountNotificationType(@RequestBody Map<String, Boolean> userSettings) {
+        return accountService.updateAccountNotificationType(userSettings);
     }
 
 }

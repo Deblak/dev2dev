@@ -23,6 +23,11 @@ const router = createRouter({
       name: "article-share",
       component: () => import("../views/ArticleShareView.vue"),
     },
+    {
+      path: "/account-notification-settings",
+      name: "account-notification-settings",
+      component: () => import("../views/AccountNotificationSetings.vue"),
+    },
   ],
 });
 

@@ -6,7 +6,6 @@ const sseConnectionActive = ref(false);
 const notifications = ref([])
 
 onMounted(async () => {
-    console.log("Notification bar monted")
     const token = localStorage.getItem('jwtToken')
     await fetchEventSource(`${import.meta.env.VITE_API_URL}sse`, {
       async onopen(response) {
