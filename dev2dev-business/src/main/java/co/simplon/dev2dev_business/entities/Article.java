@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "t_articles")
@@ -23,8 +24,8 @@ public class Article {
         this.id = id;
     }
 
-    @Column(name = "url")
-    private String url;
+    @Column(name = "link")
+    private String link;
 
     @Column(name = "title")
     private String title;
@@ -39,7 +40,7 @@ public class Article {
     private LocalDate sharedAt;
 
     @Column(name = "published_date")
-    private LocalDate publishedDate;
+    private OffsetDateTime publishedDate;
 
     @Column(name = "author")
     private String author;
@@ -49,7 +50,7 @@ public class Article {
     }
 
     public Article(String url, String title, String description, String image, LocalDate sharedAt, LocalDate publishedDate, String author) {
-        this.url = url;
+        this.link = url;
         this.title = title;
         this.description = description;
         this.image = image;
@@ -58,8 +59,8 @@ public class Article {
         this.author = author;
     }
 
-    public String getUrl() {
-        return url;
+    public String getLink() {
+        return link;
     }
 
     public String getTitle() {
@@ -86,8 +87,8 @@ public class Article {
         return author;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public void setTitle(String title) {
@@ -117,7 +118,7 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
-                "url='" + url + '\'' +
+                "url='" + link + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +

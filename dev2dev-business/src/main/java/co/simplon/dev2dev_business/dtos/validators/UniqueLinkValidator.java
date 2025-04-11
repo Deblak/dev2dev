@@ -4,10 +4,10 @@ import co.simplon.dev2dev_business.services.ArticleService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class UniqueUrlValidator implements ConstraintValidator<UniqueUrl, String> {
+public class UniqueLinkValidator implements ConstraintValidator<UniqueLink, String> {
     private final ArticleService service;
 
-    public UniqueUrlValidator(ArticleService service) {
+    public UniqueLinkValidator(ArticleService service) {
         this.service = service;
     }
 
