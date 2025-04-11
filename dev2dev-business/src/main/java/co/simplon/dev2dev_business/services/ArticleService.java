@@ -70,6 +70,9 @@ public class ArticleService {
     }
 
     public boolean existsByLink(String link){
-        return repository.existsByLinkIgnoreCase(link);
+        Boolean istrue = repository.existsByLinkIgnoreCase(link);
+        System.out.println(istrue);
+        return istrue;
+//        return repository.existsByLinkIgnoreCase(link);
     }
 }
