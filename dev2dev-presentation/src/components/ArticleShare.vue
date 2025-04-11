@@ -19,6 +19,9 @@ export default {
       }
 
       try {
+        const token = localStorage.getItem("jwtToken");
+        console.log(token);
+
         const response = await fetch("http://localhost:8080/articles/share", {
           method: "POST",
           headers: {
