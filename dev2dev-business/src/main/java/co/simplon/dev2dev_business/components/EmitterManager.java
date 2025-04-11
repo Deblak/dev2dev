@@ -1,5 +1,6 @@
 package co.simplon.dev2dev_business.components;
 
+import co.simplon.dev2dev_business.configs.JwtHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -9,59 +10,43 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEvent
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 @Component
-public class Notification {
+public class EmitterManager {
 
-    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+    private final Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
     private final ExecutorService executors = Executors.newVirtualThreadPerTaskExecutor();
 
     public SseEmitter subscribe()  {
+        String userEmail = JwtHelper.getSubject();
         var emitter = new SseEmitter(-1L);
-        emitters.add(emitter);
-        emitter.onCompletion(() -> emitters.remove(emitter));
+        emitterMap.put(userEmail, emitter);
+        emitter.onCompletion(() -> emitterMap.remove(userEmail));
         emitter.onTimeout(() -> {
             emitter.complete();
-            emitters.remove(emitter);
+            emitterMap.remove(userEmail);
         });
-
         return emitter;
     }
 
     @Async
-    public void create(String message) {
-        emitters.forEach(emitter -> {
+    public void sendNotification(List<String> userList, String message) {
+        userList.forEach( user -> {
             executors.execute( () -> {
                 try {
                     SseEventBuilder event = SseEmitter.event()
                             .id(LocalTime.now().toString())
                             .data(message)
                             .comment("comment");
-                    emitter.send(event);
+                    emitterMap.get(user).send(event);
 
                 } catch (IOException e) {
-                    emitter.completeWithError(e);
-                    emitters.remove(emitter);
+                    emitterMap.get(user).completeWithError(e);
+                    emitterMap.remove(user);
                 }
             });
         });
     }
-
-//    void retry(SseEmitter emitter, SseEventBuilder event , int retryCount) {
-//        int count = retryCount;
-//        if (count < 3) {
-//            try {
-//                Thread.sleep(50L);
-//                emitter.send(event);
-//            } catch (IOException ignored) {
-//                retry(emitter, event, count + 1);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else {
-//            emitter.completeWithError(new RuntimeException("unable to connect with client"));
-//            emitters.remove(emitter);
-//        }
-//    }
 }

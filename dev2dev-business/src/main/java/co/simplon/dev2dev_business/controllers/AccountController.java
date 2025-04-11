@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,8 @@ import co.simplon.dev2dev_business.services.AccountService;
 import co.simplon.dev2dev_business.services.EmailSender;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/accounts")
@@ -77,6 +80,17 @@ public class AccountController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponseDto verifyCode(@RequestBody VerificationLoginDto dto) {
 	return accountService.login2fa(dto);
+    }
+    @GetMapping("/notification-type")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Boolean> getAccountNotificationType() {
+        return accountService.getAccountNotificationType();
+    }
+
+    @PatchMapping("/notification-type")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Boolean> updateAccountNotificationType(@RequestBody Map<String, Boolean> userSettings) {
+        return accountService.updateAccountNotificationType(userSettings);
     }
 
 }

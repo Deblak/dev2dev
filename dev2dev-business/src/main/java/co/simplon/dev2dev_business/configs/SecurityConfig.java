@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableAsync
 @EnableWebSecurity
 @Profile("!prod")
 public class SecurityConfig {
@@ -32,7 +30,7 @@ public class SecurityConfig {
 	return new WebMvcConfigurer() {
 	    @Override
 	    public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("POST", "GET");
+		registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("POST","GET","PATCH","DELETE");
 	    }
 	};
     }

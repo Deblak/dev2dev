@@ -1,5 +1,10 @@
 package co.simplon.dev2dev_business.entities;
 
+import jakarta.persistence.*;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -40,14 +45,18 @@ public class Account {
 	@JoinColumn(name = "id_role", nullable = false)
 	private Role role;
 
-	@Override
-	public String toString() {
-		return String.format("username=%s", "password=[PORTECTED]", id, username);
-	}
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "t_account_notification_type",
+    joinColumns = @JoinColumn(name = "account_id"),
+    inverseJoinColumns = @JoinColumn(name = "notification_type_id"))
+    private Set<NotificationType> notificationTypeSet = new HashSet<>();
 
-	public Long getId() {
-		return id;
-	}
+    public Account() {
+    }
+
+    public Long getId() {
+	return id;
+    }
 
 	public void setId(Long id) {
 		this.id = id;
@@ -100,5 +109,22 @@ public class Account {
 	public void setExpirationToken(LocalDateTime expirationToken) {
 		this.expirationToken = expirationToken;
 	}
+
+    public Set<NotificationType> getNotificationTypeSet() {
+        return Collections.unmodifiableSet(notificationTypeSet);
+    }
+
+    public void addNotificationType(NotificationType notificationType) {
+        this.notificationTypeSet.add(notificationType);
+    }
+
+    public void removeNotificationType(NotificationType notificationType) {
+        this.notificationTypeSet.remove(notificationType);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("username=%s", "password=[PORTECTED]", id, username);
+    }
 
 }

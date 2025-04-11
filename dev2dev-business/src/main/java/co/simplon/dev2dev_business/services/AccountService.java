@@ -1,12 +1,20 @@
 package co.simplon.dev2dev_business.services;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
+import co.simplon.dev2dev_business.configs.JwtHelper;
+import co.simplon.dev2dev_business.entities.NotificationType;
+import co.simplon.dev2dev_business.repositories.NotificationTypeRepository;
+import com.nimbusds.jose.util.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +32,7 @@ import co.simplon.dev2dev_business.entities.Account;
 import co.simplon.dev2dev_business.entities.Role;
 import co.simplon.dev2dev_business.repositories.AccountRepository;
 import co.simplon.dev2dev_business.repositories.RoleRepository;
+import org.springframework.transaction.annotation.Transactional;
 import co.simplon.dev2dev_business.repositories.VerificationTokenRepository;
 import jakarta.mail.MessagingException;
 
@@ -34,6 +43,8 @@ public class AccountService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
+    private final EmailVerificationService email;
+	private final NotificationTypeRepository notificationTypeRepository;
     private final EmailSender emailSender;
     private final EmailVerificationService emailVerificationService;
     private final VerificationTokenRepository verificationTokenRepository;
@@ -48,13 +59,15 @@ public class AccountService {
     private String verificationUrlBack;
 
     protected AccountService(AccountRepository accountsRepo, RoleRepository roleRepository, PasswordEncoder encoder,
-	    JwtProvider jwtProvider, EmailSender emailSender, EmailVerificationService emailVerificationService,
-	    VerificationTokenRepository verificationTokenRepository) {
+                             JwtProvider jwtProvider, EmailVerificationService email, NotificationTypeRepository notificationTypeRepository, EmailSender emailSender, EmailVerificationService emailVerificationService,
+                             VerificationTokenRepository verificationTokenRepository) {
 	this.accountsRepo = accountsRepo;
 	this.roleRepository = roleRepository;
 	this.encoder = encoder;
 	this.jwtProvider = jwtProvider;
-	this.emailSender = emailSender;
+        this.email = email;
+        this.notificationTypeRepository = notificationTypeRepository;
+        this.emailSender = emailSender;
 	this.emailVerificationService = emailVerificationService;
 	this.verificationTokenRepository = verificationTokenRepository;
     }
@@ -162,4 +175,34 @@ public class AccountService {
 	return new LoginResponseDto(token, "Login successful", roleName);
     }
 
+	@Transactional
+	public Map<String, Boolean> updateAccountNotificationType(Map<String, Boolean> userSettings) {
+		String accountEmail = JwtHelper.getSubject();
+		Account account = accountsRepo.findByUsernameIgnoreCase(accountEmail)
+				.orElseThrow(() -> new BadCredentialsException(String.format("Account with username: %s not found !", accountEmail)));
+		List<NotificationType> notificationTypeList = notificationTypeRepository.findAll();
+		userSettings.keySet().forEach(key -> {
+            if (userSettings.get(key)) {
+                account.addNotificationType(notificationTypeList.stream().filter(n -> n.getTypeName().equals(key)).toList().getFirst());
+            } else {
+                account.removeNotificationType(notificationTypeList.stream().filter(n -> n.getTypeName().equals(key)).toList().getFirst());
+            }
+        });
+		Account updatedAccount = accountsRepo.saveAndFlush(account);
+		Map<String, Boolean> notificationAccountSetting = new HashMap<>();
+		notificationTypeList.forEach( notificationType ->
+				notificationAccountSetting.put(notificationType.getTypeName(), updatedAccount.getNotificationTypeSet().stream().map(NotificationType::getTypeName).toList().contains(notificationType.getTypeName())));
+		return notificationAccountSetting;
+	}
+
+	public Map<String, Boolean> getAccountNotificationType() {
+		String accountEmail = JwtHelper.getSubject();
+		Account account = accountsRepo.findByUsernameIgnoreCase(accountEmail)
+				.orElseThrow(() -> new BadCredentialsException(String.format("Account with username: %s not found !", accountEmail)));
+		List<NotificationType> notificationTypeSet = notificationTypeRepository.findAll();
+		Map<String, Boolean> notificationAccountSetting = new HashMap<>();
+		notificationTypeSet.forEach( notificationType ->
+				notificationAccountSetting.put(notificationType.getTypeName(), account.getNotificationTypeSet().stream().map(NotificationType::getTypeName).toList().contains(notificationType.getTypeName())));
+		return notificationAccountSetting;
+	}
 }

@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import("../views/ArticleShareView.vue"),
     },
     {
+      path: "/account-notification-settings",
+      name: "account-notification-settings",
+      component: () => import("../views/AccountNotificationSetings.vue"),
+    },
+    {
       path: "/verification-code",
       name: "verification-code",
       component: () => import("../views/EmailVericationCodeView.vue"),
