@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,5 +58,14 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         final Map<String, String> errors = new HashMap<>();
         errors.put("link",ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    };
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<Object> handleIOException(IOException ex) {
+        return new ResponseEntity<>(ex.getMessage(),new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(),new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
+
