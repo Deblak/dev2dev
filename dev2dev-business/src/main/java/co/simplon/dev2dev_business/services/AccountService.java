@@ -74,12 +74,6 @@ public class AccountService {
 	@Transactional
 	public void create(AccountCreateDto inputs) {
 
-		if (inputs.username() == null || inputs.username().trim().isEmpty()) {
-			throw new IllegalArgumentException("Username cannot be empty.");
-		}
-		if (accountsRepo.findByUsernameIgnoreCase(inputs.username()).isPresent()) {
-			throw new IllegalArgumentException("The user with that name already exists.");
-		}
 		Account entity = new Account();
 		entity.setUsername(inputs.username());
 		String encodedPassword = encoder.encode(inputs.password());
