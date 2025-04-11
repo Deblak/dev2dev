@@ -42,21 +42,18 @@ public class Article {
     @Column(name = "published_date")
     private OffsetDateTime publishedDate;
 
-    @Column(name = "author")
-    private String author;
-
     public Article() {
         //ORM
     }
 
-    public Article(String url, String title, String description, String image, LocalDate sharedAt, LocalDate publishedDate, String author) {
-        this.link = url;
+    public Article(Long id, String link, String title, String description, String image, LocalDate sharedAt, OffsetDateTime publishedDate) {
+        this.id = id;
+        this.link = link;
         this.title = title;
         this.description = description;
         this.image = image;
         this.sharedAt = sharedAt;
         this.publishedDate = publishedDate;
-        this.author = author;
     }
 
     public String getLink() {
@@ -71,20 +68,20 @@ public class Article {
         return description;
     }
 
+    public OffsetDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(OffsetDateTime publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public String getImage() {
         return image;
     }
 
     public LocalDate getSharedAt() {
         return sharedAt;
-    }
-
-    public LocalDate getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getAuthor() {
-        return author;
     }
 
     public void setLink(String link) {
@@ -107,24 +104,15 @@ public class Article {
         this.sharedAt = sharedAt;
     }
 
-    public void setPublishedDate(LocalDate publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     @Override
     public String toString() {
         return "Article{" +
-                "url='" + link + '\'' +
+                "link='" + link + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", sharedAt=" + sharedAt +
                 ", publishedDate=" + publishedDate +
-                ", author='" + author + '\'' +
                 '}';
     }
 }

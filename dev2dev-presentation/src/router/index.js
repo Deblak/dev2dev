@@ -32,12 +32,6 @@ const router = createRouter({
       path: "/verification-code",
       name: "verification-code",
       component: () => import("../views/EmailVericationCodeView.vue"),
-    },
-    {
-      path: '/secure-page',
-      name: 'SecurePage',
-      component: () => import('../views/SecurePage.vue'),
-      meta: { requiresAuth: true }
     }
   ],
 });

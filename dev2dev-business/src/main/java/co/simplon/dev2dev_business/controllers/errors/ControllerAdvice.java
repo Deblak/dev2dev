@@ -1,7 +1,7 @@
 package co.simplon.dev2dev_business.controllers.errors;
 
 import co.simplon.dev2dev_business.dtos.CustomErrorResponse;
-import co.simplon.dev2dev_business.exceptions.InvalidUrlException;
+import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -36,9 +36,9 @@ public class ArticleService {
     @Transactional
     public void createSharedArticle(ArticleShare inputs) {
         Document doc = null;
-        String url = inputs.url();
+        String link = inputs.link();
         try {
-            doc = Jsoup.connect(url).get();
+            doc = Jsoup.connect(link).get();
         } catch (IOException e) {
 //            throw new RuntimeException(e); //this ex will return error 401 maybe because filtre security
             throw new ArticleShareLinkException("Link is not correct", e);
@@ -50,8 +50,6 @@ public class ArticleService {
         String img = imgElements.attr("content");
         Elements descElements = doc.select("meta[property=og:description]");
         String description = descElements.attr("content");
-        Elements authorElements = doc.select("meta[name=author]");
-        String author = authorElements.attr("content");
         LocalDate sharedAt = LocalDate.now();
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
@@ -65,14 +63,19 @@ public class ArticleService {
 //            }
            throw new ConstraintViolationException(violations);
         }else {
-            Article article = new Article(url, title, description, img, sharedAt, null, author
-            );
+            Article article = new Article();
+            article.setLink(link);
+            article.setTitle(title);
+            article.setDescription(description);
+            article.setImage(img);
+            article.setSharedAt(sharedAt);
+            article.setPublishedDate(null);
             repository.save(article);
             notification.create(article.getTitle());
         }
     }
 
-    public boolean existsByUrl(String url){
-        return repository.existsByUrlIgnoreCase(url);
+    public boolean existsByLink(String link){
+        return repository.existsByLinkIgnoreCase(link);
     }
 }
