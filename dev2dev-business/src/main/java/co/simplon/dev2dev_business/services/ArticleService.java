@@ -47,7 +47,6 @@ public class ArticleService {
         String img = imgElements.attr("content");
         Elements descElements = doc.select("meta[property=og:description]");
         String description = descElements.attr("content");
-        LocalDate sharedAt = LocalDate.now();
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
         Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
@@ -65,7 +64,6 @@ public class ArticleService {
             article.setTitle(title);
             article.setDescription(description);
             article.setImage(img);
-            article.setSharedAt(sharedAt);
             article.setPublishedDate(null);
             repository.save(article);
         }
