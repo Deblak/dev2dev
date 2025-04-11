@@ -24,9 +24,9 @@ onMounted(() => {
         }}</RouterLink>
       </button>
       <div class="notification-bar" v-if="token && userRole === 'MEMBER'">
-        <a href="/account-notification-settings">
+        <RouterLink to="/account-notification-settings">
             profil
-          </a>
+          </RouterLink>
         <NotificationBar />
       </div>
     </div>

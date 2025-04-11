@@ -1,5 +1,6 @@
 package co.simplon.dev2dev_business.services;
 
+import co.simplon.dev2dev_business.components.NotificationManager;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShare;
 import co.simplon.dev2dev_business.entities.Article;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Set;
 
 
@@ -24,10 +24,12 @@ import java.util.Set;
 public class ArticleService {
     private final ArticleRepository repository;
     private final Validator validator;
+    private final NotificationManager notificationManager;
 
-    public ArticleService(ArticleRepository repository, Validator validator) {
+    public ArticleService(ArticleRepository repository, Validator validator, NotificationManager notificationManager) {
         this.repository = repository;
         this.validator = validator;
+        this.notificationManager = notificationManager;
     }
 
     @Transactional
@@ -66,6 +68,7 @@ public class ArticleService {
             article.setImage(img);
             article.setPublishedDate(null);
             repository.save(article);
+            notificationManager.notifyUsersForArticle(article.getTitle());
         }
     }
 
