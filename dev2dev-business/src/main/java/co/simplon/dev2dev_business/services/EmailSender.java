@@ -10,26 +10,23 @@ import jakarta.mail.internet.MimeMessage;
 
 @Component
 public class EmailSender {
-	private JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
-	protected EmailSender(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
-	}
+    protected EmailSender(JavaMailSender mailSender) {
+	this.mailSender = mailSender;
+    }
 
-	@Value("${dev2dev-business.email.from}")
-	private String sender;
+    @Value("${dev2dev-business.email.from}")
+    private String sender;
 
-	public void sendEmail(String to, String subject, String htmlText) throws MessagingException {
+    public void sendEmail(String to, String subject, String htmlText) throws MessagingException {
+	MimeMessage message = mailSender.createMimeMessage();
+	MimeMessageHelper helper = new MimeMessageHelper(message, true);
+	helper.setFrom(sender);
+	helper.setTo(to);
+	helper.setSubject(subject);
+	helper.setText(htmlText, true);
 
-		MimeMessage message = mailSender.createMimeMessage();
-
-		MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-		helper.setFrom(sender);
-		helper.setTo(to);
-		helper.setSubject(subject);
-		helper.setText(htmlText, true);
-
-		mailSender.send(message);
-	}
+	mailSender.send(message);
+    }
 }

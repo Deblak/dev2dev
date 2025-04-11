@@ -20,9 +20,9 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ControllerAdvice extends ResponseEntityExceptionHandler {
-    @Override //handle valid dto inputs
+    @Override // handle valid dto inputs
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+	    HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
 //        final Map<String, String> errors = new HashMap<>();
 //        for (FieldError error : ex.getFieldErrors()) {
@@ -34,28 +34,29 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         final ArrayList<String> codes = new ArrayList<>();
         for (FieldError error : ex.getFieldErrors()) {
             codes.add(error.getCode());
-            System.out.println(error.getCode());
+            //System.out.println(error.getCode());
             fieldErrors.put(error.getField(), codes);
         }
         customErrorResponse.setFieldErrors(fieldErrors);
         return handleExceptionInternal(ex, customErrorResponse, headers, status, request);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class) //handle valid have not title article
-    public ResponseEntity<Object> handleConstraintViolationException(final ConstraintViolationException ex){
-        final Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(error -> {
-            final String fieldName = error.getPropertyPath().toString();
-            final String errorMessage = error.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    @ExceptionHandler(ConstraintViolationException.class) // handle valid have not title article
+    public ResponseEntity<Object> handleConstraintViolationException(final ConstraintViolationException ex) {
+	final Map<String, String> errors = new HashMap<>();
+	ex.getConstraintViolations().forEach(error -> {
+	    final String fieldName = error.getPropertyPath().toString();
+	    final String errorMessage = error.getMessage();
+	    errors.put(fieldName, errorMessage);
+	});
+	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(InvalidUrlException.class) //handle can not access url
-    public ResponseEntity<Object> handleInvalidUrlException(InvalidUrlException ex){
-        final Map<String, String> errors = new HashMap<>();
-        errors.put("url",ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    @ExceptionHandler(InvalidUrlException.class)
+    public ResponseEntity<Object> handleInvalidUrlException(InvalidUrlException ex) {
+	final Map<String, String> errors = new HashMap<>();
+	errors.put("url", ex.getMessage());
+	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
 }
