@@ -9,6 +9,6 @@ import org.hibernate.validator.constraints.Length;
 public record ProviderCreationBodyDto(
         @NotBlank @Length(max = 200)  @UniqueProviderName String title,
         @NotBlank @Length(max = 1000) String description,
-        @NotBlank @Length(max = 400)  @UniqueProviderUrl @Pattern(regexp = "^https?:/{2}[^<>/\\s]+(?:/[^<>/\\s]+)*$",flags= Pattern.Flag.CASE_INSENSITIVE, message = "Url provided not valid. Please try again") String url
+        @NotBlank @Length(max = 2300)  @UniqueProviderUrl @Pattern(regexp = "^https?:/{2}[^<>/\\s]+(?:/[^<>/\\s]+)*$",flags= Pattern.Flag.CASE_INSENSITIVE, message = "Url provided not valid. Please try again") String url
 ) {
 }

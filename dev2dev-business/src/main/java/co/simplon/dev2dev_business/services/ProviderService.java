@@ -3,7 +3,9 @@ package co.simplon.dev2dev_business.services;
 import co.simplon.dev2dev_business.dtos.ArticleRssDto;
 import co.simplon.dev2dev_business.dtos.ProviderCreationBodyDto;
 import co.simplon.dev2dev_business.jparepositories.ProviderJpaRepository;
+import co.simplon.dev2dev_business.mappers.ArticleMapper;
 import co.simplon.dev2dev_business.mappers.ProviderMapper;
+import co.simplon.dev2dev_business.repositories.ArticleRepository;
 import co.simplon.dev2dev_business.utils.DateUtils;
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
@@ -23,10 +25,12 @@ import java.util.*;
 public class ProviderService {
 
     private final ProviderJpaRepository providerJpaRepository;
+    private final ArticleRepository articleRepository;
     private final Validator validator;
 
-    public ProviderService(ProviderJpaRepository providerJpaRepository, Validator validator){
+    public ProviderService(ProviderJpaRepository providerJpaRepository, ArticleRepository articleRepository, Validator validator){
         this.providerJpaRepository = providerJpaRepository;
+        this.articleRepository = articleRepository;
         this.validator = validator;
     }
 
@@ -51,11 +55,6 @@ public class ProviderService {
                         storeArticles.add(itemData);
                     });
             verifyValidArticles(ProviderMapper.toArticleDtosList(storeArticles));
-
-            //Ajouter la logique pour vérifier en bdd si l'article n'existe pas deja
-            //faire un custom validator.
-            //ensuite save en bdd
-            //il faut que je pull et que j'interroge l'entité Article
             OffsetDateTime getLastUpdate = null;
                 String lastUpdate = lastUpdateDate.get();
                 getLastUpdate = DateUtils.convertStringToOffsetDateTime(lastUpdate);
@@ -72,6 +71,8 @@ public class ProviderService {
             Set<ConstraintViolation<ArticleRssDto>> constraintViolations = validator.validate(articleDto);
             if(!constraintViolations.isEmpty()) {
                 throw new ConstraintViolationException(constraintViolations);
+            }else {
+                 articleRepository.save(ArticleMapper.toArticleEntity(articleDto));
             }
         }
     }
@@ -80,9 +81,15 @@ public class ProviderService {
         System.out.println(isTrue);
         return isTrue;
     }
-    public boolean existsByLink(String value) {
+    public boolean existsByRssLink(String value) {
         Boolean isTrue =  providerJpaRepository.existsByLinkIgnoreCase(value);
         System.out.println(isTrue);
         return isTrue;
+    }
+    public boolean existsByLink(String link){
+    Boolean isTrue = articleRepository.existsByLinkIgnoreCase(link);
+        System.out.println(isTrue);
+        return isTrue;
+
     }
 }

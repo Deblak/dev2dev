@@ -16,6 +16,6 @@ public class UniqueProviderUrlValidator implements ConstraintValidator<UniquePro
         if(null == value){
             return true;
         }
-        return !providerService.existsByLink(value);
+        return !providerService.existsByRssLink(value);
     }
 }
