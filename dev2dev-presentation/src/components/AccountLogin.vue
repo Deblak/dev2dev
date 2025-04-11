@@ -80,13 +80,13 @@ export default {
             <form @submit.prevent="submit" novalidate>
                 <label for="username">{{ $t('email') }}</label>
                 <input type="text" name="username" id="username" inputmode="email" v-model="formData.username"
-                    :placeholder="$t('emailPlaceholder')" />
+                    placeholder="test@gmail.com" />
                 <p v-if="error.username" class="error">{{ error.username }}</p>
 
                 <label for="password">{{ $t('password') }}</label>
                 <div class="password-container">
                     <input :type="visiblePassword ? 'text' : 'password'" name="password" id="password"
-                        v-model="formData.password" :placeholder="$t('passwordPlaceholder')" />
+                        v-model="formData.password" placeholder="test@gmail.com" />
                     <p class="eye" @click="visiblePassword = !visiblePassword">
                         <i :class="visiblePassword ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"></i>
                     </p>

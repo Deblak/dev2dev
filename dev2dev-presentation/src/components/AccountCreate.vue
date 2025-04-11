@@ -7,7 +7,7 @@
 				<input
 					type="email"
 					v-model="form.username"
-					placeholder="email@email.com"
+					placeholder="email@gmail.com"
 				/>
 				<p class="error" v-if="errors.username">{{ errors.username }}</p>
 
