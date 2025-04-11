@@ -52,9 +52,9 @@ a {
 }
 
 .menu {
-  width: 300px;
+  width: 150px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   /* padding: 15px; */
 }
@@ -63,7 +63,6 @@ a {
 }
 .text-decoration-none {
   text-decoration: none;
-  display: block;
-  width: 100px;
+  color: white;
 }
 </style>
