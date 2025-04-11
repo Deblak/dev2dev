@@ -4,7 +4,7 @@ import co.simplon.dev2dev_business.components.Notification;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShare;
 import co.simplon.dev2dev_business.entities.Article;
-import co.simplon.dev2dev_business.exceptions.InvalidUrlException;
+import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
 import co.simplon.dev2dev_business.repositories.ArticleRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -41,7 +41,7 @@ public class ArticleService {
             doc = Jsoup.connect(url).get();
         } catch (IOException e) {
 //            throw new RuntimeException(e); //this ex will return error 401 maybe because filtre security
-            throw new InvalidUrlException("Url is not correct", e);
+            throw new ArticleShareLinkException("Link is not correct", e);
         }
 
         Elements titleElements = doc.select("meta[property=og:title]");
