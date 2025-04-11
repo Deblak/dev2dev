@@ -15,14 +15,11 @@ onMounted(() => {
 <template>
   <header>
     <h1>Dev2Dev</h1>
-
     <div class="menu" v-if="token && userRole === 'MEMBER'">
-      <button class="margin-btn">
-        <RouterLink to="/article-share" class="text-decoration-none">{{
-          $t("shareArticle")
-        }}</RouterLink>
-      </button>
-      <div class="notification-bar" v-if="token && userRole === 'MEMBER'">
+      <RouterLink to="/article-share" class="text-decoration-none">{{
+        $t("shareArticle")
+      }}</RouterLink>
+      <div class="notification-bar">
         <RouterLink to="/account-notification-settings"> profil </RouterLink>
         <NotificationBar />
       </div>
@@ -52,17 +49,14 @@ a {
 }
 
 .menu {
-  width: 150px;
+  width: 300px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  /* padding: 15px; */
-}
-.margin-btn {
-  margin-bottom: 15%;
 }
 .text-decoration-none {
   text-decoration: none;
-  color: white;
+  display: block;
+  width: 100px;
 }
 </style>
