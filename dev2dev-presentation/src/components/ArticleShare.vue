@@ -12,7 +12,7 @@ export default {
       if (!this.link) {
         this.errors.push("linkRequire");
       } else if (!this.isValidLink(this.link)) {
-        this.errors.push("linkNotValid");
+        this.errors.push("urlNotCorrect");
       }
       if (this.errors.length > 0) {
         return;
@@ -35,7 +35,11 @@ export default {
         } else if (response.status == 400) {
           //add handle errors
           response.json().then((e) => {
-            this.errors.push(e.link || e.title);
+            if (e.fieldErrors) {
+              this.errors.push("urlExisted");
+            } else {
+              this.errors.push("errorCreate");
+            }
           });
         }
       } catch (error) {
@@ -58,14 +62,13 @@ export default {
   <div class="text-center">
     <div class="article-share-box">
       <h1>{{ $t("articleShareTitle") }}</h1>
-      <p v-if="successMsg">{{ successMsg }}</p>
+      <p v-if="successMsg" class="message-success">{{ successMsg }}</p>
       <form @submit.prevent="checkForm" novalidate>
         <div>
           <label for="link">{{ $t("articleShareLabel") }} </label>
           <input type="link" name="link" id="link" v-model="link" />
         </div>
         <p v-for="error in errors" class="message-error" v-if="errors">
-          <!-- {{ error }} -->
           {{ $t(error) }}
         </p>
         <button type="submit">{{ $t("articleShareBtn") }}</button>
@@ -93,6 +96,9 @@ label::after {
 .message-error {
   font-size: small;
   color: red;
+}
+.message-success {
+  color: rgb(38, 147, 28);
 }
 input {
   width: 60%;
