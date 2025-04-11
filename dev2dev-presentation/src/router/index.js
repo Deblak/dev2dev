@@ -36,9 +36,9 @@ const router = createRouter({
   ],
 });
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('jwtToken');
+  const isAuthenticated = !!localStorage.getItem("jwtToken");
   if (to.meta.requiresAuth && !isAuthenticated) {
-      return next('/');
+    return next("/");
   }
 
   next();
