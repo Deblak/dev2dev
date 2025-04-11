@@ -72,8 +72,8 @@ spring.mail.protocol=<secret>
 spring.mail.properties.mail.smtp.ssl.enable=true
 spring.mail.properties.mail.smtp.auth=true
 dev2dev-business.token.expiration-minutes=<temps en minutes>
-dev2dev-business.email.confirmation-url-base=http://localhost/:<port>/accounts/verify
-dev2dev-business.email.verification-url-back=http://localhost/:<port>/accounts/verify
+dev2dev-business.email.confirmation-url-base=http://localhost:<port>/accounts/verify
+dev2dev-business.email.verification-url-back=http://localhost:<port>/accounts/verify
 
 # Claim custom
 spring.security.oauth2.resourceserver.jwt.authority-prefix=
