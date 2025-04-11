@@ -2,7 +2,6 @@ package co.simplon.dev2dev_business.controllers;
 
 
 import co.simplon.dev2dev_business.dtos.ProviderCreationBodyDto;
-import co.simplon.dev2dev_business.dtos.ProviderCreationResponseDto;
 import co.simplon.dev2dev_business.services.ProviderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class ProviderController {
 
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ProviderCreationResponseDto createNewProvider(@Valid @RequestBody ProviderCreationBodyDto body) throws IOException {
-       return providerService.create(body);
+    public void createNewProvider(@Valid @RequestBody ProviderCreationBodyDto body) throws IOException {
+        providerService.create(body);
     }
 }

@@ -4,12 +4,10 @@ import co.simplon.dev2dev_business.services.ProviderService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-//ConstraintValidator<UniqueTitle, String> : Cela signifie que cette classe va valider des objets annotés avec l'annotation @UniqueTitle (comme dans ton précédent code). Elle va aussi valider des champs de type String (comme les Title dans cet exemple).
-public class UniqueTitleValidator implements ConstraintValidator<UniqueTitle, String> {
+public class UniqueProviderUrlValidator implements ConstraintValidator<UniqueProviderUrl,String> {
 
     private final ProviderService providerService;
-
-    public UniqueTitleValidator(ProviderService providerService) {
+    public UniqueProviderUrlValidator(ProviderService providerService) {
         this.providerService = providerService;
     }
     @Override
@@ -18,6 +16,6 @@ public class UniqueTitleValidator implements ConstraintValidator<UniqueTitle, St
         if(null == value){
             return true;
         }
-        return !providerService.existsByTitle(value);
+        return !providerService.existsByLink(value);
     }
 }

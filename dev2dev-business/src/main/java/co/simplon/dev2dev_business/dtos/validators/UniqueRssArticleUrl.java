@@ -6,11 +6,14 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueTitleValidator.class)
-public @interface UniqueTitle {
-    String message() default "The website name provided should be unique ";
+@Target(ElementType.FIELD)
+@Constraint(validatedBy = UniqueRssArticleUrlValidator.class)
+public @interface UniqueRssArticleUrl {
+
+    String message() default "The link must be unique. Please try again ";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

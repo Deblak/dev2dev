@@ -1,69 +1,79 @@
 package co.simplon.dev2dev_business.services;
 
-import co.simplon.dev2dev_business.dtos.LastUpdatedDateDto;
+import co.simplon.dev2dev_business.dtos.ArticleRssDto;
 import co.simplon.dev2dev_business.dtos.ProviderCreationBodyDto;
-import co.simplon.dev2dev_business.dtos.ProviderCreationResponseDto;
 import co.simplon.dev2dev_business.jparepositories.ProviderJpaRepository;
 import co.simplon.dev2dev_business.mappers.ProviderMapper;
 import co.simplon.dev2dev_business.utils.DateUtils;
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Stream;
+
 
 @Service
 @Transactional(readOnly = true)
 public class ProviderService {
 
     private final ProviderJpaRepository providerJpaRepository;
+    private final Validator validator;
 
-    public ProviderService(ProviderJpaRepository providerJpaRepository){
+    public ProviderService(ProviderJpaRepository providerJpaRepository, Validator validator){
         this.providerJpaRepository = providerJpaRepository;
+        this.validator = validator;
     }
 
-    @Transactional(readOnly = true)
-    public ProviderCreationResponseDto create(ProviderCreationBodyDto body) throws IOException {
+    @Transactional
+    public void create(ProviderCreationBodyDto body) throws IOException {
         try {
             RssReader rssReader = new RssReader();
             // un flux paresseux (lazy)qui ne s'execute que lorsqu'elle est consommées (Collection() / findfirst() etc)
-            Stream<Item> rssFeed = rssReader.read(body.url());
-            Optional<String> lastUpdateDate = rssFeed.findFirst()
+            List<Item> rssFeed = rssReader.read(body.url()).toList();
+            System.out.println(rssFeed);
+            List<Map<String,Optional<String>>> storeArticles = new ArrayList<>();
+            Optional<String> lastUpdateDate = rssFeed.stream().findFirst()
                     .flatMap(item -> item.getChannel().getPubDate());
+            System.out.println(lastUpdateDate);
+             rssFeed
+                    .forEach(item -> {
+                        Map<String, Optional<String>> itemData = new HashMap<>();
+                        itemData.put("Title", item.getTitle());
+                        itemData.put("Description", item.getDescription());
+                        itemData.put("Link", item.getLink()); //vérifier si le lien exists deja
+                        itemData.put("Published", item.getPubDate());
+                        storeArticles.add(itemData);
+                    });
+            verifyValidArticles(ProviderMapper.toArticleDtosList(storeArticles));
+
+            //Ajouter la logique pour vérifier en bdd si l'article n'existe pas deja
+            //faire un custom validator.
+            //ensuite save en bdd
+            //il faut que je pull et que j'interroge l'entité Article
             OffsetDateTime getLastUpdate = null;
                 String lastUpdate = lastUpdateDate.get();
                 getLastUpdate = DateUtils.convertStringToOffsetDateTime(lastUpdate);
                 System.out.println("this is the value of time : " + getLastUpdate);
-                //Implemnter la lecture des articles
-            rssFeed.close();
-            rssFeed =rssReader.read(body.url());
-            HashMap<String,Optional<String>> storeArticles = new HashMap<>();
-//            rssFeed.map(item ->
-//                    String toto = item.getTitle();
-//            String author = item.getAuthor() != null ? item.getAuthor() : "Auteur inconnu";
-//                    storeArticles.put("author", item.getAuthor()),
-//                    storeArticles.put("t", item.getLinks())
-//                    )
-
-
-                //fin
             providerJpaRepository.save(ProviderMapper.toProviderEntity(body, ProviderMapper.toLastUpdatedDateDto(getLastUpdate)));
-            return ProviderMapper.toProviderCreationResponse(ProviderMapper.toProviderEntity(body, ProviderMapper.toLastUpdatedDateDto(getLastUpdate)));
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException("RSS reading error.Cannot parse the link. Try again with a valid link", e);
         }
 
     }
-
-    public void valide(LastUpdatedDateDto lastUpdatedDateDto) {
-
+    public void verifyValidArticles(List<ArticleRssDto> articleDtos) {//Modifer avec le dto article
+        for(ArticleRssDto articleDto : articleDtos) {
+            Set<ConstraintViolation<ArticleRssDto>> constraintViolations = validator.validate(articleDto);
+            if(!constraintViolations.isEmpty()) {
+                throw new ConstraintViolationException(constraintViolations);
+            }
+        }
     }
     public boolean existsByTitle(String value) {
         Boolean isTrue =  providerJpaRepository.existsByTitleIgnoreCase(value);
@@ -74,6 +84,5 @@ public class ProviderService {
         Boolean isTrue =  providerJpaRepository.existsByLinkIgnoreCase(value);
         System.out.println(isTrue);
         return isTrue;
-
     }
 }
