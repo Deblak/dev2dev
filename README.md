@@ -14,6 +14,9 @@ Create a database for your project with this command:
 ```sql
 CREATE DATABASE dev2dev;
 ```
+And run SQL script files :
+```schema.ddl.sql```
+```data.dml.sql```
 
 4. Update Backend Application Configuration
 In the application-dev.properties file of your backend application, you must configure the connection to PostgreSQL with the following parameters:

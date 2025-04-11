@@ -1,6 +1,8 @@
 DELETE FROM t_accounts;
 DELETE FROM t_roles;
 DELETE FROM t_notification_types;
+DELETE FROM t_articles;
+DELETE FROM t_articles_accounts;
 
 INSERT INTO t_roles (name, role_default) VALUES 
 ('MEMBER', true),
