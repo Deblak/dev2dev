@@ -13,7 +13,6 @@ onMounted(() => {
 </script>
 
 <template>
-
   <header>
     <h1>Dev2Dev</h1>
 
@@ -24,9 +23,7 @@ onMounted(() => {
         }}</RouterLink>
       </button>
       <div class="notification-bar" v-if="token && userRole === 'MEMBER'">
-        <RouterLink to="/account-notification-settings">
-            profil
-          </RouterLink>
+        <RouterLink to="/account-notification-settings"> profil </RouterLink>
         <NotificationBar />
       </div>
     </div>
@@ -47,17 +44,17 @@ header {
 }
 
 .notification-bar {
-    display: flex;
+  display: flex;
 }
 
 a {
-    margin-right: 50px;
+  margin-right: 50px;
 }
 
 .menu {
-  width: 150px;
+  width: 300px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   /* padding: 15px; */
 }
@@ -66,7 +63,7 @@ a {
 }
 .text-decoration-none {
   text-decoration: none;
-  color: white;
+  display: block;
+  width: 100px;
 }
 </style>
-
