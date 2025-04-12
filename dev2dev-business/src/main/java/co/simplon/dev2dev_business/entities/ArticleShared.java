@@ -6,14 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "articles_accounts")
+@Table(name = "t_articles_accounts")
 public class ArticleShared {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +28,10 @@ public class ArticleShared {
 
     @Column(name = "shared_at")
     private LocalDate sharedAt;
+
+    public ArticleShared() {
+        //ORM
+    }
 
     public ArticleShared(Long id, Article article, Account account, LocalDate sharedAt) {
         this.id = id;
@@ -67,6 +70,16 @@ public class ArticleShared {
 
     public void setSharedAt(LocalDate sharedAt) {
         this.sharedAt = sharedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleShared{" +
+                "id=" + id +
+                ", article=" + article +
+                ", account=" + account +
+                ", sharedAt=" + sharedAt +
+                '}';
     }
 }
 //LocalDate sharedAt = LocalDate.now();
