@@ -14,6 +14,7 @@ export default {
       } else if (!this.isValidLink(this.link)) {
         this.errors.push("urlNotCorrect");
       }
+      setTimeout(() => (this.errors = []), 30000); //30 seconds
       if (this.errors.length > 0) {
         return;
       }
@@ -26,6 +27,7 @@ export default {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ link: this.link }),
         });
@@ -40,11 +42,15 @@ export default {
             } else {
               this.errors.push("errorCreate");
             }
+            setTimeout(() => (this.errors = []), 30000); //30 seconds
           });
         }
       } catch (error) {
         this.errors.push("errorServer");
       }
+      console.log("ggg");
+
+      setTimeout(() => (this.successMsg = ""), 60000); //  1 second = 1000
     },
     isValidLink(str) {
       try {

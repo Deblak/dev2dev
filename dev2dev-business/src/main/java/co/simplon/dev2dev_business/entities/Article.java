@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "t_articles")
@@ -20,6 +22,7 @@ public class Article {
     public Long getId() {
         return id;
     }
+
     private void setId(long id) {
         this.id = id;
     }
@@ -38,6 +41,9 @@ public class Article {
 
     @Column(name = "published_date")
     private OffsetDateTime publishedDate;
+
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    List<ArticleShared> articleShareds = new ArrayList<>();
 
     public Article() {
         //ORM
@@ -92,6 +98,14 @@ public class Article {
         this.image = image;
     }
 
+    public List<ArticleShared> getArticleShareds() {
+        return articleShareds;
+    }
+
+    public void setArticleShareds(List<ArticleShared> articleShareds) {
+        this.articleShareds = articleShareds;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -102,4 +116,6 @@ public class Article {
                 ", publishedDate=" + publishedDate +
                 '}';
     }
+
+
 }

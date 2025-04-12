@@ -17,6 +17,7 @@
 
 ### Java build files ###
 *.iml
+*.xml
 
 ### Logs ###
 ./logs
@@ -25,5 +26,4 @@
 ### IntelliJ idea ###
 .idea
 *.iws
-*.iml
 *.ipr
