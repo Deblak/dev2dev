@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,14 +59,22 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         final Map<String, String> errors = new HashMap<>();
         errors.put("link",ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    };
+    }
+
     @ExceptionHandler(IOException.class)
     protected ResponseEntity<Object> handleIOException(IOException ex) {
         return new ResponseEntity<>(ex.getMessage(),new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(),new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 }
 

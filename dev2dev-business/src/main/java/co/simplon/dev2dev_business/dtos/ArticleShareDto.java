@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
-public record ArticleShare(@NotBlank @Size(max = 3000) @URL @UniqueLink String link) {
+public record ArticleShareDto(@NotBlank @Size(max = 3000) @URL @UniqueLink String link) {
 }
