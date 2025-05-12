@@ -1,6 +1,7 @@
 package co.simplon.dev2dev_business.components;
 
 import co.simplon.dev2dev_business.configs.JwtHelper;
+import co.simplon.dev2dev_business.exceptions.AsyncException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -51,6 +52,7 @@ public class EmitterManager {
                 } catch (IOException e) {
                     emitterMap.get(user).completeWithError(e);
                     emitterMap.remove(user);
+                    new AsyncException();
                 }
             });
         });
