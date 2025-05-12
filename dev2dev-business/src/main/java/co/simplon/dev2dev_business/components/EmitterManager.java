@@ -44,7 +44,9 @@ public class EmitterManager {
                             .id(LocalTime.now().toString())
                             .data(message)
                             .comment("comment");
-                    emitterMap.get(user).send(event);
+                    if (emitterMap.containsKey(user)) {
+                        emitterMap.get(user).send(event);
+                    }
 
                 } catch (IOException e) {
                     emitterMap.get(user).completeWithError(e);
