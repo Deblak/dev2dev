@@ -64,21 +64,21 @@ CREATE TABLE t_account_notification_type(
 );
 
 CREATE TABLE t_articles_accounts(
-		id INT GENERATED ALWAYS AS IDENTITY,
-		article_id int,
-		account_id int,
-		shared_at TIMESTAMP,
-		CONSTRAINT t_articles_accounts_articles_fkey FOREIGN KEY (article_id) REFERENCES t_articles(id),
-		CONSTRAINT t_articles_accounts_accounts_fkey FOREIGN KEY (account_id) REFERENCES t_accounts(id),
-		CONSTRAINT t_articles_accounts_unique UNIQUE (article_id, account_id)
+	id INT GENERATED ALWAYS AS IDENTITY,
+	article_id int,
+	account_id int,
+	shared_at TIMESTAMP,
+	CONSTRAINT t_articles_accounts_articles_fkey FOREIGN KEY (article_id) REFERENCES t_articles(id),
+	CONSTRAINT t_articles_accounts_accounts_fkey FOREIGN KEY (account_id) REFERENCES t_accounts(id),
+	CONSTRAINT t_articles_accounts_unique UNIQUE (article_id, account_id)
 );
 
 CREATE TABLE t_provider(
-id INT GENERATED ALWAYS AS IDENTITY,
-title VARCHAR(200) NOT NULL,
-link VARCHAR(2300) NOT NULL,
-description TEXT NOT NULL,
-last_date_updated DATE,
-CONSTRAINT t_provider_title_ukey UNIQUE(title),
-CONSTRAINT t_provider_link_ukey UNIQUE(link)
+	id INT GENERATED ALWAYS AS IDENTITY,
+	title VARCHAR(200) NOT NULL,
+	link VARCHAR(2300) NOT NULL,
+	description TEXT NOT NULL,
+	last_date_updated DATE,
+	CONSTRAINT t_provider_title_ukey UNIQUE(title),
+	CONSTRAINT t_provider_link_ukey UNIQUE(link)
 );
