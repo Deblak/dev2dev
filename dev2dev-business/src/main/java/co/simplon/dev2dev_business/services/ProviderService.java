@@ -1,6 +1,7 @@
 package co.simplon.dev2dev_business.services;
 
 import co.simplon.dev2dev_business.dtos.ArticleRssDto;
+import co.simplon.dev2dev_business.dtos.AutomatProviderUrl;
 import co.simplon.dev2dev_business.dtos.ProviderCreationBodyDto;
 import co.simplon.dev2dev_business.jparepositories.ProviderJpaRepository;
 import co.simplon.dev2dev_business.mappers.ArticleMapper;
@@ -90,6 +91,9 @@ public class ProviderService {
     Boolean isTrue = articleRepository.existsByLinkIgnoreCase(link);
         System.out.println(isTrue);
         return isTrue;
+    }
+
+    public void testJob(AutomatProviderUrl url) {
 
     }
 }

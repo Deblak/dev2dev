@@ -18,5 +18,8 @@
     "errorCreate":"Error share article, please try again later!",
     "shareArticle": "Share article",
     "verificationCode": "Enter code",
-    "verificationCodeInfo":"Please enter the verification code (sending by email) to continue your login."
+    "verificationCodeInfo":"Please enter the verification code (sending by email) to continue your login.",
+    "websiteName" : "Nom du site",
+    "rssUrl" : "Lien Rss",
+    "description" : "Description"
 }
