@@ -37,6 +37,11 @@ const router = createRouter({
       path: "/verification-code",
       name: "verification-code",
       component: () => import("../views/EmailVericationCodeView.vue"),
+    },
+    {
+      path: "/integrator",
+      name: "integrator",
+      component : () => import("../views/IntegratorView.vue")
     }
   ],
 });
