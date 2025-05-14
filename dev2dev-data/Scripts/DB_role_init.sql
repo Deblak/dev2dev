@@ -5,7 +5,14 @@ CREATE ROLE dbinit
 LOGIN
 PASSWORD 'dbinit';
 
-REVOKE ALL ON SCHEMA public FROM public;
+REVOKE ALL PRIVILEGES
+ON SCHEMA public 
+FROM public;
+
+REVOKE ALL PRIVILEGES 
+ON ALL TABLES 
+IN SCHEMA "public" 
+FROM dbinit;
 
 REVOKE ALL PRIVILEGES 
 ON DATABASE dev2dev 
@@ -14,8 +21,8 @@ FROM dbinit;
 GRANT USAGE ON SCHEMA public 
 TO dbinit;
 
---ALTER DATABASE dev2dev
---OWNER TO dbinit;
+ALTER DATABASE dev2dev
+OWNER TO dbinit;
 
 GRANT CREATE
 ON SCHEMA "public"
