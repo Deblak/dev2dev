@@ -9,32 +9,32 @@ dev2dev project with **Java** (JDK 21), **Vite Vue.js** (v.3). No front framewor
 psql -U postgres
 ```
 
-2 Create DataBase
+2. Create DataBase
 Create a database for your project with this command:
 ```sql
 CREATE DATABASE dev2dev;
 ```
 
-3 As 'superuser' (postgres by default) run the script:
+3. As 'superuser' (postgres by default) run the script:
 ```DB_role_init.sql```
 ```DB_role_api.sql```
 
-4 Login as "dbinit" and run the script:
+4. Login as "dbinit" and run the script:
 ```schema.ddl.sql```
 to create the tables.
 
-5 then login as "api" and run the scipt:
+5. then login as "api" and run the scipt:
 ```data.dml.sql```
 to insert data.
 
-6 Update Backend Application Configuration
+6. Update Backend Application Configuration
 In the application-dev.properties file of your backend application, you must configure the connection to PostgreSQL with the following parameters:
 ```application.properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/dev2dev
 ```
 Replace dev2dev_user and yourpassword with your "api" DB user credential.
 
-7 Launch the application
+7. Launch the application
 Once you've created your database and updated your application configuration, you can start your backend. If you're using Maven, you can run :
 bash
 `mvn spring-boot:run`
