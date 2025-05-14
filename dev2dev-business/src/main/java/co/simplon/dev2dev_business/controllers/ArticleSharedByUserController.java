@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/articles")
-public class ArticleController {
+public class ArticleSharedByUserController {
     private final ArticleSharedByUserService articleSharedByUserService;
 
-    public ArticleController(ArticleSharedByUserService articleSharedByUserService) {
+    public ArticleSharedByUserController(ArticleSharedByUserService articleSharedByUserService) {
         this.articleSharedByUserService = articleSharedByUserService;
     }
+
     @PostMapping(value = "/share", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> createSharedArticle(@RequestBody @Valid ArticleShareDto inputs){
+    ResponseEntity<Void> createSharedArticle(@RequestBody @Valid ArticleShareDto inputs) {
         articleSharedByUserService.createSharedArticle(inputs);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
