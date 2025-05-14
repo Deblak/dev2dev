@@ -38,7 +38,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-		.authorizeHttpRequests((req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify", "/articles/share").permitAll()
+		.authorizeHttpRequests((req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify", "/articles/share", "/articles", "/articles/test").permitAll()
 				.requestMatchers(HttpMethod.POST, "sandbox-rss/api/v1/provider").permitAll() //laissez ici c'est pour les tests (flemme créer un token each time)
 			.requestMatchers(HttpMethod.POST, "/accounts", "/accounts/login", "accounts/verification-code"
 				)

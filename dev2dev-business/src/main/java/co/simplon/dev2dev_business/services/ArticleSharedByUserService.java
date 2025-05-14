@@ -74,7 +74,6 @@ public class ArticleSharedByUserService {
         String title = getInfoOgtag(doc, "title]");
         String img = getInfoOgtag(doc, "img]");
         String description = getInfoOgtag(doc, "description]");
-        System.out.println("test save save");
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
         Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
@@ -93,10 +92,8 @@ public class ArticleSharedByUserService {
             article.setDescription(description);
             article.setImage(img);
             article.setPublishedDate(null);
-            System.out.println("save save save");
             System.out.println(article);
             articleService.save(article);
-            System.out.println("venir just qu'à d'ici");
             return article;
         }
     }
