@@ -22,40 +22,54 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @Profile("!prod")
 public class SecurityConfig {
-    @Value("${dev2dev-business.cors.allowedOrigin}")
-    private String allowedOrigins;
+	@Value("${dev2dev-business.cors.allowedOrigin}")
+	private String allowedOrigins;
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("POST", "GET", "PATCH", "DELETE");
-            }
-        };
-    }
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("POST", "GET", "PATCH",
+						"DELETE", "PUT");
+			}
+		};
+	}
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify").permitAll()
-                        .requestMatchers(HttpMethod.POST, "sandbox-rss/api/v1/provider").hasRole("INTEGRATOR") //laissez ici c'est pour les tests (flemme crer un token each time)
-                        .requestMatchers(HttpMethod.POST, "/articles/share").hasRole("MEMBER")
-                        .requestMatchers(HttpMethod.POST, "/accounts", "/accounts/login", "accounts/verification-code"
-                        )
-                        .anonymous())
-                .authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
-                .oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults())).build();
-    }
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(
+						(req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify").permitAll()
+								.requestMatchers(HttpMethod.PUT, "/notifications/read/{id}").permitAll()
+								.requestMatchers(HttpMethod.POST, "/articles/share").hasRole("MEMBER")
+								.requestMatchers(HttpMethod.POST, "sandbox-rss/api/v1/provider").hasRole("INTEGRATOR") // laissez
+																														// ici
+																														// c'est
+																														// pour
+																														// les
+																														// tests
+																														// (flemme
+																														// crer
+																														// un
+																														// token
+																														// each
+																														// time)
+								.requestMatchers(HttpMethod.POST, "/accounts", "/accounts/login",
+										"accounts/verification-code")
+								.anonymous())
+				.authorizeHttpRequests((reqs) -> reqs.anyRequest().authenticated())
+				.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults())).build();
+	}
 
-    @ExceptionHandler(DataAccessException.class)
-    protected ResponseEntity<Object> handleDataAccessException(DataAccessException ex, WebRequest request) {
-        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
-    }
+	@ExceptionHandler(DataAccessException.class)
+	protected ResponseEntity<Object> handleDataAccessException(DataAccessException ex, WebRequest request) {
+		return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	}
 
-    private ResponseEntity<Object> handleExceptionInternal(DataAccessException ex, Object object,
-                                                           HttpHeaders httpHeaders, HttpStatus conflict, WebRequest request) {
-        return null;
-    }
+	private ResponseEntity<Object> handleExceptionInternal(DataAccessException ex, Object object,
+			HttpHeaders httpHeaders, HttpStatus conflict, WebRequest request) {
+		return null;
+	}
 
 }

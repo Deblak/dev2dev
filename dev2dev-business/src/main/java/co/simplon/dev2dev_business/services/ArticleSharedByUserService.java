@@ -1,14 +1,31 @@
 package co.simplon.dev2dev_business.services;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.simplon.dev2dev_business.components.NotificationManager;
 import co.simplon.dev2dev_business.configs.JwtHelper;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShareDto;
+import co.simplon.dev2dev_business.dtos.ArticleShareProjectionDto;
 import co.simplon.dev2dev_business.entities.Account;
 import co.simplon.dev2dev_business.entities.Article;
 import co.simplon.dev2dev_business.entities.ArticleShared;
 import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
 import co.simplon.dev2dev_business.exceptions.DuplicateRelationException;
+import co.simplon.dev2dev_business.repositories.ArticleSharedRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -28,19 +45,24 @@ import java.util.Set;
 
 @Service
 public class ArticleSharedByUserService {
-    private final ArticleSharedService articleSharedService;
-    private final ArticleService articleService;
-    private final AccountService accountService;
-    private final NotificationManager notificationManager;
-    private final Validator validator;
+	private final ArticleSharedService articleSharedService;
+	private final ArticleService articleService;
+	private final AccountService accountService;
+	private final ArticleSharedRepository articleSharedRepository;
+	private final NotificationManager notificationManager;
+	private final Validator validator;
 
-    public ArticleSharedByUserService(ArticleSharedService articleSharedService, ArticleService articleService, AccountService accountService, NotificationManager notificationManager, Validator validator) {
-        this.articleSharedService = articleSharedService;
-        this.articleService = articleService;
-        this.accountService = accountService;
-        this.notificationManager = notificationManager;
-        this.validator = validator;
-    }
+	@Autowired
+	public ArticleSharedByUserService(ArticleSharedService articleSharedService, ArticleService articleService,
+			AccountService accountService, ArticleSharedRepository articleSharedRepository,
+			NotificationManager notificationManager, Validator validator) {
+		this.articleSharedService = articleSharedService;
+		this.articleService = articleService;
+		this.accountService = accountService;
+		this.articleSharedRepository = articleSharedRepository;
+		this.notificationManager = notificationManager;
+		this.validator = validator;
+	}
 
     @Transactional
     public void createSharedArticle(final ArticleShareDto inputs) {
@@ -105,9 +127,19 @@ public class ArticleSharedByUserService {
         }
     }
 
-    private static String getInfoOgtag(Document doc, String info) {
-        Elements titleElements = doc.select("meta[property=og:" + info);
-        String title = titleElements.attr("content");
-        return title;
-    }
+	private static String getInfoOgtag(Document doc, String info) {
+		Elements titleElements = doc.select("meta[property=og:" + info);
+		String title = titleElements.attr("content");
+		return title;
+	}
+
+	public List<ArticleShareProjectionDto> getAll() {
+		List<ArticleShared> articlesShared = articleSharedService.findAll();
+		return articlesShared.stream()
+				.map(articleShared -> new ArticleShareProjectionDto(articleShared.getArticle().getLink(),
+						articleShared.getArticle().getTitle(), articleShared.getArticle().getDescription(),
+						articleShared.getSharedAt()))
+				.collect(Collectors.toList());
+	}
+
 }

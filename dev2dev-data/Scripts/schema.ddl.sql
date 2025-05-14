@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS t_accounts;
 DROP TABLE IF EXISTS t_roles;
 DROP TABLE IF EXISTS t_notification_types;
 DROP TABLE IF EXISTS t_articles;
+DROP TABLE IF EXISTS t_articles_read_by_accounts;
 DROP TABLE IF EXISTS t_provider;
 
 CREATE TABLE t_roles(
@@ -71,6 +72,14 @@ CREATE TABLE t_articles_accounts(
 	CONSTRAINT t_articles_accounts_articles_fkey FOREIGN KEY (article_id) REFERENCES t_articles(id),
 	CONSTRAINT t_articles_accounts_accounts_fkey FOREIGN KEY (account_id) REFERENCES t_accounts(id),
 	CONSTRAINT t_articles_accounts_unique UNIQUE (article_id, account_id)
+);
+
+CREATE TABLE t_articles_read_by_accounts(
+	article_id INT,
+    account_id INT,
+    CONSTRAINT t_articles_read_by_accounts_articles_fkey FOREIGN KEY (article_id) REFERENCES t_articles(id) ON DELETE CASCADE,
+	CONSTRAINT t_articles_read_by_accounts_accounts_fkey FOREIGN KEY (account_id) REFERENCES t_accounts(id) ON DELETE CASCADE,
+    CONSTRAINT t_articles_read_by_accounts_unique UNIQUE(article_id, account_id)
 );
 
 CREATE TABLE t_provider(
