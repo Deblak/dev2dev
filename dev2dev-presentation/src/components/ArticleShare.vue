@@ -44,7 +44,8 @@ export default {
       } catch (error) {
         this.errors.push("errorServer");
       }
-      setTimeout(() => (this.successMsg = ""), 60000); //  1 second = 1000
+
+      setTimeout(() => (this.successMsg = ""), 60000); 
     },
     isValidLink(str) {
       try {

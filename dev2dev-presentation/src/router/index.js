@@ -42,6 +42,11 @@ const router = createRouter({
       component: () => import("../views/ArticleShareView.vue"),
     },
     {
+      path: "/articles-list-share",
+      name: "articles-list-share",
+      component: () => import("../views/ArticlesListShareView.vue"),
+    },
+    {
       path: "/account-notification-settings",
       name: "account-notification-settings",
       component: () => import("../views/AccountNotificationSetings.vue"),
@@ -50,7 +55,7 @@ const router = createRouter({
       path: "/verification-code",
       name: "verification-code",
       component: () => import("../views/EmailVericationCodeView.vue"),
-    },
+       },
     {
       path: "/integrator",
       name: "integrator",
