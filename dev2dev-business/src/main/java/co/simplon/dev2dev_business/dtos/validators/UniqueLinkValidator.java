@@ -16,7 +16,6 @@ public class UniqueLinkValidator implements ConstraintValidator<UniqueLink, Stri
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context){
-        System.out.println("value=" + value);
         if (value == null){
             return true;
         }

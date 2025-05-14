@@ -18,4 +18,7 @@ public class ArticleSharedService {
         articleSharedRepository.save(articleShared);
     }
 
+    public boolean existByLinkAndAccountEmail(String link, String accountEmail){
+        return articleSharedRepository.existByLinkAndAccountEmail(link, accountEmail);
+    }
 }

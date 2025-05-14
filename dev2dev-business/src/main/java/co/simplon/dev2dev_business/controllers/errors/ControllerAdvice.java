@@ -2,7 +2,9 @@ package co.simplon.dev2dev_business.controllers.errors;
 
 import co.simplon.dev2dev_business.dtos.CustomErrorResponse;
 import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
+import co.simplon.dev2dev_business.exceptions.DuplicateRelationException;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -75,6 +77,11 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
 
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(DuplicateRelationException.class)
+    public ResponseEntity<String> handleDuplicateRelation(DuplicateRelationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
 
