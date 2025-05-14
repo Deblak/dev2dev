@@ -9,20 +9,18 @@ export default {
     },
     async checkForm(e) {
       this.errors = [];
+      //validation front
       if (!this.link) {
         this.errors.push("linkRequire");
       } else if (!this.isValidLink(this.link)) {
-        this.errors.push("urlNotCorrect");
+        this.errors.push("linkNotCorrect");
       }
       setTimeout(() => (this.errors = []), 30000); //30 seconds
       if (this.errors.length > 0) {
         return;
       }
-
       try {
         const token = localStorage.getItem("jwtToken");
-        console.log(token);
-
         const response = await fetch("http://localhost:8080/articles/share", {
           method: "POST",
           headers: {
@@ -37,19 +35,15 @@ export default {
         } else if (response.status == 400) {
           //add handle errors
           response.json().then((e) => {
-            if (e.fieldErrors) {
-              this.errors.push("urlExisted");
-            } else {
-              this.errors.push("errorCreate");
-            }
-            setTimeout(() => (this.errors = []), 30000); //30 seconds
+            this.errors.push("errorShareArticle");
           });
+        } else if (response.status == 409) {
+          this.errors.push("linkExisted");
         }
+        setTimeout(() => (this.errors = []), 30000); //30 seconds
       } catch (error) {
         this.errors.push("errorServer");
       }
-      console.log("ggg");
-
       setTimeout(() => (this.successMsg = ""), 60000); //  1 second = 1000
     },
     isValidLink(str) {

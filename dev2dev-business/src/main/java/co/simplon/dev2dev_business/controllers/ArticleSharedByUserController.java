@@ -21,7 +21,7 @@ public class ArticleSharedByUserController {
     }
 
     @PostMapping(value = "/share", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> createSharedArticle(@RequestBody @Valid ArticleShareDto inputs){
+    ResponseEntity<Void> createSharedArticle(@RequestBody @Valid ArticleShareDto inputs) {
         articleSharedByUserService.createSharedArticle(inputs);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
