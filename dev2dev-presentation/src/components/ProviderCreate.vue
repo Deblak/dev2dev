@@ -39,10 +39,13 @@ const createRssFlux = (async ()=> {
     if(errors.value.websiteNameErrorMsg.length > 0 || errors.value.descriptionErrorMsg.length > 0 || errors.value.linkErrorMsg.length > 0) {
             return;
         }
+        const token = localStorage.getItem("jwtToken");
+        console.log(token);
     const response = await fetch("http://localhost:8080/sandbox-rss/api/v1/provider", {
         method : "POST",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body : JSON.stringify({
             title : websiteName.value,
