@@ -36,9 +36,10 @@ public class JwtConfig {
 
     @Bean
     JwtDecoder jwtDecoder() {
-	SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HMACSHA256");
+	SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
 	NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
 	OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);
+    decoder.setJwtValidator(validator);
 	return decoder;
     }
 }

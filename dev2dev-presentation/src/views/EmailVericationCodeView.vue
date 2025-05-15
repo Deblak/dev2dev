@@ -32,9 +32,16 @@ export default {
 				localStorage.setItem("role", data.role);
 				localStorage.removeItem("preJwtToken");
 				localStorage.removeItem("username");
-				this.$router.push("/article-share").then(() => {
+				const roleValue = localStorage.getItem("role")
+				if(roleValue === 'INTEGRATOR') {
+					this.$router.push("/integrator").then(() => {
 					this.$router.go();
 				});
+				} else if (roleValue === 'MEMBER') {
+					this.$router.push("/article-share").then(() => {
+						this.$router.go();
+					});
+				}
 			} else {
 				alert("Invalid or expired verification code.");
 			}

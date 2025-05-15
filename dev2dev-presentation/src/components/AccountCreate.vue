@@ -2,7 +2,7 @@
 	<div class="page">
 		<h1>CREATE ACCOUNT</h1>
 		<div class="form-container">
-			<form @submit.prevent="validForm" >
+			<form @submit.prevent="validForm">
 				<label>Email*</label>
 				<input
 					type="email"
@@ -113,6 +113,11 @@ export default {
 		validEmail(email) {
 			const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			return regex.test(email);
+			if (!this.form.username.trim()) {
+				this.errors.username = "Email is required.";
+			} else if (!this.validEmail(this.form.username)) {
+				this.errors.username = "Invalid email format.";
+			}
 		},
 	},
 };

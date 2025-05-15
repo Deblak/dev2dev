@@ -1,19 +1,39 @@
 package co.simplon.dev2dev_business.services;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.simplon.dev2dev_business.components.NotificationManager;
 import co.simplon.dev2dev_business.configs.JwtHelper;
 import co.simplon.dev2dev_business.dtos.ArticleDtoValid;
 import co.simplon.dev2dev_business.dtos.ArticleShareDto;
+import co.simplon.dev2dev_business.dtos.ArticleShareProjectionDto;
 import co.simplon.dev2dev_business.entities.Account;
 import co.simplon.dev2dev_business.entities.Article;
 import co.simplon.dev2dev_business.entities.ArticleShared;
 import co.simplon.dev2dev_business.exceptions.ArticleShareLinkException;
+import co.simplon.dev2dev_business.exceptions.DuplicateRelationException;
+import co.simplon.dev2dev_business.repositories.ArticleSharedRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,60 +45,69 @@ import java.util.Set;
 
 @Service
 public class ArticleSharedByUserService {
-    private final ArticleSharedService articleSharedService;
-    private final ArticleService articleService;
-    private final AccountService accountService;
-    private final NotificationManager notificationManager;
-    private final Validator validator;
+	private final ArticleSharedService articleSharedService;
+	private final ArticleService articleService;
+	private final AccountService accountService;
+	private final ArticleSharedRepository articleSharedRepository;
+	private final NotificationManager notificationManager;
+	private final Validator validator;
 
-    public ArticleSharedByUserService(ArticleSharedService articleSharedService, ArticleService articleService, AccountService accountService, NotificationManager notificationManager, Validator validator) {
-        this.articleSharedService = articleSharedService;
-        this.articleService = articleService;
-        this.accountService = accountService;
-        this.notificationManager = notificationManager;
-        this.validator = validator;
-    }
+	@Autowired
+	public ArticleSharedByUserService(ArticleSharedService articleSharedService, ArticleService articleService,
+			AccountService accountService, ArticleSharedRepository articleSharedRepository,
+			NotificationManager notificationManager, Validator validator) {
+		this.articleSharedService = articleSharedService;
+		this.articleService = articleService;
+		this.accountService = accountService;
+		this.articleSharedRepository = articleSharedRepository;
+		this.notificationManager = notificationManager;
+		this.validator = validator;
+	}
 
     @Transactional
-    public void createSharedArticle(final ArticleShareDto inputs){
+    public void createSharedArticle(final ArticleShareDto inputs) {
         final String link = inputs.link();
         String accountEmail = JwtHelper.getSubject();
 
-        Account account = accountService.findByUsernameIgnoreCase(accountEmail).orElseThrow(()-> new BadCredentialsException(accountEmail));
+        Account account = accountService.findByUsernameIgnoreCase(accountEmail).orElseThrow(() -> new BadCredentialsException(accountEmail));
 
         Optional<Article> optionalArticle = articleService.findByLinkIgnoreCase(link);
         ArticleShared articleShared = new ArticleShared();
         articleShared.setAccount(account);
         articleShared.setSharedAt(LocalDate.now());
-
+// If the article doesn't exist => add it to the article table + create a relation: user shared the article
+// If the article is already shared => check if this user shared it or not
+//   - If not, just create the relation: user shared the article
+//   - If yes, return exception
         if (optionalArticle.isEmpty()) {
             Article article = saveArticle(link);
             articleShared.setArticle(article);
+            articleSharedService.save(articleShared);
             notificationManager.notifyUsersForArticle(article.getTitle());
-        }else{
+        } else if (!articleSharedService.existByLinkAndAccountEmail(link, accountEmail)) {
             Article articleExits = optionalArticle.get();
             articleShared.setArticle(articleExits);
+            articleSharedService.save(articleShared);
+        } else {
+            throw new DuplicateRelationException("This article has already been shared by the user");
         }
-        articleSharedService.save(articleShared);
-}
+    }
 
     private Article saveArticle(String link) {
         Document doc = null;
         try {
             doc = Jsoup.connect(link).get();
         } catch (IOException e) {
-//            throw new RuntimeException(e); //this ex will return error 401 maybe because filtre security
             throw new ArticleShareLinkException("Link is not correct", e);
         }
 
         String title = getInfoOgtag(doc, "title]");
         String img = getInfoOgtag(doc, "img]");
         String description = getInfoOgtag(doc, "description]");
-        System.out.println("test save save");
 
         ArticleDtoValid articleDto = new ArticleDtoValid(title);
         Set<ConstraintViolation<ArticleDtoValid>> violations = validator.validate(articleDto);
-        if (!violations.isEmpty()){
+        if (!violations.isEmpty()) {
             //need this part for debug
 //            for (ConstraintViolation<ArticleDtoValid> violation : violations) {
 //                System.out.println("PROGRAMMATIC VALIDATION");
@@ -86,24 +115,31 @@ public class ArticleSharedByUserService {
 //                System.out.println("--------------------------");
 //            }
             throw new ConstraintViolationException(violations);
-        }else {
+        } else {
             Article article = new Article();
             article.setLink(link);
             article.setTitle(title);
             article.setDescription(description);
             article.setImage(img);
             article.setPublishedDate(null);
-            System.out.println("save save save");
-            System.out.println(article);
             articleService.save(article);
-            System.out.println("venir just qu'à d'ici");
             return article;
         }
     }
 
-    private static String getInfoOgtag(Document doc, String info) {
-        Elements titleElements = doc.select("meta[property=og:"+info);
-        String title = titleElements.attr("content");
-        return title;
-    }
-    }
+	private static String getInfoOgtag(Document doc, String info) {
+		Elements titleElements = doc.select("meta[property=og:" + info);
+		String title = titleElements.attr("content");
+		return title;
+	}
+
+	public List<ArticleShareProjectionDto> getAll() {
+		List<ArticleShared> articlesShared = articleSharedService.findAll();
+		return articlesShared.stream()
+				.map(articleShared -> new ArticleShareProjectionDto(articleShared.getArticle().getLink(),
+						articleShared.getArticle().getTitle(), articleShared.getArticle().getDescription(),
+						articleShared.getSharedAt()))
+				.collect(Collectors.toList());
+	}
+
+}
