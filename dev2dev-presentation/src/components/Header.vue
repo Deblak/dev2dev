@@ -26,6 +26,11 @@ onMounted(() => {
         <NotificationBar />
       </div>
     </div>
+    <div v-if="token && userRole === 'INTEGRATOR'">
+        <RouterLink to="/integrator">
+          <span class="material-symbols-outlined" id="rss_feed_icon">rss_feed</span>
+        </RouterLink>
+      </div>
   </header>
 </template>
 
@@ -65,5 +70,15 @@ a {
   text-decoration: none;
   display: block;
   width: 100px;
+}
+#rss_feed_icon{
+  color: black;
+  font-size: 28px;
+}
+#rss_feed_icon:hover{
+  color : red;
+}
+#rss_feed_icon:active{
+  color : black;
 }
 </style>

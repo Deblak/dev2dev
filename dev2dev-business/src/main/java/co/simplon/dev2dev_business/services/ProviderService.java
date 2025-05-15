@@ -41,11 +41,11 @@ public class ProviderService {
             RssReader rssReader = new RssReader();
             // un flux paresseux (lazy)qui ne s'execute que lorsqu'elle est consommées (Collection() / findfirst() etc)
             List<Item> rssFeed = rssReader.read(body.url()).toList();
-            System.out.println(rssFeed);
+            System.out.println("this is the rss feed = " + rssFeed);
             List<Map<String,Optional<String>>> storeArticles = new ArrayList<>();
             Optional<String> lastUpdateDate = rssFeed.stream().findFirst()
                     .flatMap(item -> item.getChannel().getPubDate());
-            System.out.println(lastUpdateDate);
+            System.out.println("this is the last updated date = " + lastUpdateDate);
              rssFeed
                     .forEach(item -> {
                         Map<String, Optional<String>> itemData = new HashMap<>();

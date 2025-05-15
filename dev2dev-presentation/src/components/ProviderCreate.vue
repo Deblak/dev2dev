@@ -39,8 +39,8 @@ const createRssFlux = (async ()=> {
     if(errors.value.websiteNameErrorMsg.length > 0 || errors.value.descriptionErrorMsg.length > 0 || errors.value.linkErrorMsg.length > 0) {
             return;
         }
+        try {
         const token = localStorage.getItem("jwtToken");
-        console.log(token);
     const response = await fetch("http://localhost:8080/sandbox-rss/api/v1/provider", {
         method : "POST",
         headers: {
@@ -60,18 +60,33 @@ const createRssFlux = (async ()=> {
         successMsg.value = "Rss field provider correctly created !!!"
     }else if (response.status === 400 || 404){
         window.alert("not working")
+        console.log(response)
+        const contentType = response.headers.get("content-type");
+        console.log(contentType)
+        if(contentType && contentType.includes("application/json")) {
         response.json().then(error => {
+            console.log(error)
             if(error.fieldErrors){
             if(error.fieldErrors.title) {
                 alreadyExistingTitle.value = "Name already exists, please chose another one"
-            } 
+            } else
             if(error.fieldErrors.url) {
                 alreadyExistingUrl.value = "Url already exists, please chose another one"
             } 
+        } else {
+            alreadyExistingUrl.value = "Some article from the rss feed already exists in the database"
         }
-        })
+        }) }else {
+            response.text().then(() => alreadyExistingUrl.value = "Error parsing of the format date ")
+        }
+    }} catch (error) {
+        console.log(error.message)
+        console.log(error)
+        window.alert(error)
+        internalError.value = "Internal server error";
+
     }
-    setTimeout(() => (successMsg.value = ""), 60000);
+    setTimeout(() => (successMsg.value = ""), 6000);
 
 })
 
@@ -100,6 +115,7 @@ const createRssFlux = (async ()=> {
             <p class="error" v-if="errors.descriptionErrorMsg">{{ errors.descriptionErrorMsg}}</p>
         </div>
         <p v-if="successMsg" class="message-success "> {{ successMsg }}</p>
+        <p v-if="internalError" class="error "> {{ internalError }}</p>
         <button type="submit">{{t('articleShareBtn')}}</button>
     </form>
 
