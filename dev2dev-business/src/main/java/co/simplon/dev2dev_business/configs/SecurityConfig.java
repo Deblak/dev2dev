@@ -40,7 +40,7 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(
-						(req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify").permitAll()
+						(req) -> req.requestMatchers(HttpMethod.GET, "/accounts/verify", "/accounts/roles").permitAll()
 								.requestMatchers(HttpMethod.PUT, "/notifications/read/{id}").permitAll()
 								.requestMatchers(HttpMethod.POST, "/articles/share").hasRole("MEMBER")
 								.requestMatchers(HttpMethod.POST, "sandbox-rss/api/v1/provider").hasRole("INTEGRATOR") // laissez
