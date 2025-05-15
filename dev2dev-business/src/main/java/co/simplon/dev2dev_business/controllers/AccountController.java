@@ -2,8 +2,11 @@ package co.simplon.dev2dev_business.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.UUID;
 
+import co.simplon.dev2dev_business.entities.Role;
+import co.simplon.dev2dev_business.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +34,12 @@ public class AccountController {
 
     private final AccountService accountService;
     private final EmailSender emailSender;
+    private final RoleService roleService;
 
-    public AccountController(AccountService accountService, EmailSender emailSender) {
+    public AccountController(AccountService accountService, EmailSender emailSender, RoleService roleService) {
 	this.accountService = accountService;
 	this.emailSender = emailSender;
+    this.roleService = roleService;
     }
 
     @PostMapping
@@ -91,6 +96,13 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Boolean> updateAccountNotificationType(@RequestBody Map<String, Boolean> userSettings) {
         return accountService.updateAccountNotificationType(userSettings);
+    }
+
+    @Deprecated(since = "for cache test", forRemoval = true)
+    @GetMapping("/roles")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Role> getRoles() {
+        return roleService.getRoles();
     }
 
 }
